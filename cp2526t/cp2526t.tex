@@ -1,0 +1,882 @@
+\documentclass[11pt, a4paper, fleqn]{article}
+\usepackage{cp2526t}
+\makeindex
+
+%================= lhs2tex=====================================================%
+%% ODER: format ==         = "\mathrel{==}"
+%% ODER: format /=         = "\neq "
+%
+%
+\makeatletter
+\@ifundefined{lhs2tex.lhs2tex.sty.read}%
+  {\@namedef{lhs2tex.lhs2tex.sty.read}{}%
+   \newcommand\SkipToFmtEnd{}%
+   \newcommand\EndFmtInput{}%
+   \long\def\SkipToFmtEnd#1\EndFmtInput{}%
+  }\SkipToFmtEnd
+
+\newcommand\ReadOnlyOnce[1]{\@ifundefined{#1}{\@namedef{#1}{}}\SkipToFmtEnd}
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\DeclareFontFamily{OT1}{cmtex}{}
+\DeclareFontShape{OT1}{cmtex}{m}{n}
+  {<5><6><7><8>cmtex8
+   <9>cmtex9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmtex10}{}
+\DeclareFontShape{OT1}{cmtex}{m}{it}
+  {<-> ssub * cmtt/m/it}{}
+\newcommand{\texfamily}{\fontfamily{cmtex}\selectfont}
+\DeclareFontShape{OT1}{cmtt}{bx}{n}
+  {<5><6><7><8>cmtt8
+   <9>cmbtt9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmbtt10}{}
+\DeclareFontShape{OT1}{cmtex}{bx}{n}
+  {<-> ssub * cmtt/bx/n}{}
+\newcommand{\tex}[1]{\text{\texfamily#1}}	% NEU
+
+\newcommand{\Sp}{\hskip.33334em\relax}
+
+
+\newcommand{\Conid}[1]{\mathit{#1}}
+\newcommand{\Varid}[1]{\mathit{#1}}
+\newcommand{\anonymous}{\kern0.06em \vbox{\hrule\@width.5em}}
+\newcommand{\plus}{\mathbin{+\!\!\!+}}
+\newcommand{\bind}{\mathbin{>\!\!\!>\mkern-6.7mu=}}
+\newcommand{\rbind}{\mathbin{=\mkern-6.7mu<\!\!\!<}}% suggested by Neil Mitchell
+\newcommand{\sequ}{\mathbin{>\!\!\!>}}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\usepackage{polytable}
+
+%mathindent has to be defined
+\@ifundefined{mathindent}%
+  {\newdimen\mathindent\mathindent\leftmargini}%
+  {}%
+
+\def\resethooks{%
+  \global\let\SaveRestoreHook\empty
+  \global\let\ColumnHook\empty}
+\newcommand*{\savecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\savecolumns[#1]}}
+\newcommand*{\restorecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\restorecolumns[#1]}}
+\newcommand*{\aligncolumn}[2]%
+  {\g@addto@macro\ColumnHook{\column{#1}{#2}}}
+
+\resethooks
+
+\newcommand{\onelinecommentchars}{\quad-{}- }
+\newcommand{\commentbeginchars}{\enskip\{-}
+\newcommand{\commentendchars}{-\}\enskip}
+
+\newcommand{\visiblecomments}{%
+  \let\onelinecomment=\onelinecommentchars
+  \let\commentbegin=\commentbeginchars
+  \let\commentend=\commentendchars}
+
+\newcommand{\invisiblecomments}{%
+  \let\onelinecomment=\empty
+  \let\commentbegin=\empty
+  \let\commentend=\empty}
+
+\visiblecomments
+
+\newlength{\blanklineskip}
+\setlength{\blanklineskip}{0.66084ex}
+
+\newcommand{\hsindent}[1]{\quad}% default is fixed indentation
+\let\hspre\empty
+\let\hspost\empty
+\newcommand{\NB}{\textbf{NB}}
+\newcommand{\Todo}[1]{$\langle$\textbf{To do:}~#1$\rangle$}
+
+\EndFmtInput
+\makeatother
+%
+%
+%
+%
+%
+%
+% This package provides two environments suitable to take the place
+% of hscode, called "plainhscode" and "arrayhscode". 
+%
+% The plain environment surrounds each code block by vertical space,
+% and it uses \abovedisplayskip and \belowdisplayskip to get spacing
+% similar to formulas. Note that if these dimensions are changed,
+% the spacing around displayed math formulas changes as well.
+% All code is indented using \leftskip.
+%
+% Changed 19.08.2004 to reflect changes in colorcode. Should work with
+% CodeGroup.sty.
+%
+\ReadOnlyOnce{polycode.fmt}%
+\makeatletter
+
+\newcommand{\hsnewpar}[1]%
+  {{\parskip=0pt\parindent=0pt\par\vskip #1\noindent}}
+
+% can be used, for instance, to redefine the code size, by setting the
+% command to \small or something alike
+\newcommand{\hscodestyle}{}
+
+% The command \sethscode can be used to switch the code formatting
+% behaviour by mapping the hscode environment in the subst directive
+% to a new LaTeX environment.
+
+\newcommand{\sethscode}[1]%
+  {\expandafter\let\expandafter\hscode\csname #1\endcsname
+   \expandafter\let\expandafter\endhscode\csname end#1\endcsname}
+
+% "compatibility" mode restores the non-polycode.fmt layout.
+
+\newenvironment{compathscode}%
+  {\par\noindent
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed\)%
+   \par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\compaths}{\sethscode{compathscode}}
+
+% "plain" mode is the proposed default.
+% It should now work with \centering.
+% This required some changes. The old version
+% is still available for reference as oldplainhscode.
+
+\newenvironment{plainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newenvironment{oldplainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+% Here, we make plainhscode the default environment.
+
+\newcommand{\plainhs}{\sethscode{plainhscode}}
+\newcommand{\oldplainhs}{\sethscode{oldplainhscode}}
+\plainhs
+
+% The arrayhscode is like plain, but makes use of polytable's
+% parray environment which disallows page breaks in code blocks.
+
+\newenvironment{arrayhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\parray}%
+  {\endparray\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newcommand{\arrayhs}{\sethscode{arrayhscode}}
+
+% The mathhscode environment also makes use of polytable's parray 
+% environment. It is supposed to be used only inside math mode 
+% (I used it to typeset the type rules in my thesis).
+
+\newenvironment{mathhscode}%
+  {\parray}{\endparray}
+
+\newcommand{\mathhs}{\sethscode{mathhscode}}
+
+% texths is similar to mathhs, but works in text mode.
+
+\newenvironment{texthscode}%
+  {\(\parray}{\endparray\)}
+
+\newcommand{\texths}{\sethscode{texthscode}}
+
+% The framed environment places code in a framed box.
+
+\def\codeframewidth{\arrayrulewidth}
+\RequirePackage{calc}
+
+\newenvironment{framedhscode}%
+  {\parskip=\abovedisplayskip\par\noindent
+   \hscodestyle
+   \arrayrulewidth=\codeframewidth
+   \tabular{@{}|p{\linewidth-2\arraycolsep-2\arrayrulewidth-2pt}|@{}}%
+   \hline\framedhslinecorrect\\{-1.5ex}%
+   \let\endoflinesave=\\
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \framedhslinecorrect\endoflinesave{.5ex}\hline
+   \endtabular
+   \parskip=\belowdisplayskip\par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\framedhslinecorrect}[2]%
+  {#1[#2]}
+
+\newcommand{\framedhs}{\sethscode{framedhscode}}
+
+% The inlinehscode environment is an experimental environment
+% that can be used to typeset displayed code inline.
+
+\newenvironment{inlinehscode}%
+  {\(\def\column##1##2{}%
+   \let\>\undefined\let\<\undefined\let\\\undefined
+   \newcommand\>[1][]{}\newcommand\<[1][]{}\newcommand\\[1][]{}%
+   \def\fromto##1##2##3{##3}%
+   \def\nextline{}}{\) }%
+
+\newcommand{\inlinehs}{\sethscode{inlinehscode}}
+
+% The joincode environment is a separate environment that
+% can be used to surround and thereby connect multiple code
+% blocks.
+
+\newenvironment{joincode}%
+  {\let\orighscode=\hscode
+   \let\origendhscode=\endhscode
+   \def\endhscode{\def\hscode{\endgroup\def\@currenvir{hscode}\\}\begingroup}
+   %\let\SaveRestoreHook=\empty
+   %\let\ColumnHook=\empty
+   %\let\resethooks=\empty
+   \orighscode\def\hscode{\endgroup\def\@currenvir{hscode}}}%
+  {\origendhscode
+   \global\let\hscode=\orighscode
+   \global\let\endhscode=\origendhscode}%
+
+\makeatother
+\EndFmtInput
+%
+%%format (bin (n) (k)) = "\Big(\vcenter{\xymatrix@R=1pt{" n "\\" k "}}\Big)"
+%------------------------------------------------------------------------------%
+
+%====== DEFINIR GRUPO E ELEMENTOS =============================================%
+
+\group{G99}
+\studentA{xxxxxx}{Nome }
+\studentB{xxxxxx}{Nome }
+\studentC{xxxxxx}{Nome }
+
+%==============================================================================%
+
+\begin{document}
+\sffamily
+\setlength{\parindent}{0em}
+\emergencystretch 3em
+\renewcommand{\baselinestretch}{1.25} 
+\input{Cover}
+\pagestyle{pagestyle}
+
+\newgeometry{left=25mm,right=20mm,top=25mm,bottom=25mm}
+\setlength{\parindent}{1em}
+
+\section*{Preâmbulo}
+
+Em \CP\ pretende-se ensinar a progra\-mação de computadores
+como uma disciplina científica. Para isso parte-se de um repertório de \emph{combinadores}
+que formam uma álgebra da programação % (conjunto de leis universais e seus corolários)
+e usam-se esses combinadores para construir programas \emph{composicionalmente},
+isto é, agregando programas já existentes.
+
+Na sequência pedagógica dos planos de estudo dos cursos que têm
+esta disciplina, opta-se pela aplicação deste método à programação
+em \Haskell\ (sem prejuízo da sua aplicação a outras linguagens
+funcionais). Assim, o presente trabalho prático coloca os
+alunos perante problemas concretos que deverão ser implementados em
+\Haskell. Há ainda um outro objectivo: o de ensinar a documentar
+programas, a validá-los e a produzir textos técnico-científicos de
+qualidade.
+
+Antes de abordarem os problemas propostos no trabalho, os grupos devem ler
+com atenção o anexo \ref{sec:documentacao} onde encontrarão as instruções
+relativas ao \emph{software} a instalar, etc.
+
+Valoriza-se a escrita de \emph{pouco} código que corresponda a soluções
+simples e elegantes que utilizem os combinadores de ordem superior estudados
+na disciplina.
+
+\noindent \textbf{Avaliação}. Faz parte da avaliação do trabalho a sua defesa
+por parte dos elementos de cada grupo. Estes devem estar preparados para
+responder a perguntas sobre \emph{qualquer} dos problemas deste enunciado.
+A prestação \emph{individual} de cada aluno nessa defesa oral será uma componente
+importante e diferenciadora da avaliação.
+
+
+\Problema
+Uma serialização (ou travessia) de uma árvore é uma sua representação sob a forma de uma lista. 
+Na biblioteca \ensuremath{{\BTree}} encontram-se as funções de serialização \ensuremath{\Varid{inordt}}, \ensuremath{\Varid{preordt}} e \ensuremath{\Varid{postordt}},
+que fazem as travessias \emph{in-order}, \emph{ pre-order} e \emph{post-order}, respectivamente.
+Todas essas travessias são catamorfismos que percorrem a árvore argumento em regime \emph{depth-first}.
+
+Pretende-se agora uma função \ensuremath{\Varid{bforder}} que faça a travessia em regime \emph{breadth-first},
+isto é, por níveis.
+Por exemplo, para a árvore \ensuremath{t_1 } dada em anexo e mostrada na figura a seguir,
+
+\begin{center}
+	\figura
+\end{center}
+
+\noindent a função deverá dar a lista
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[9]{}[\mskip1.5mu \mathrm{5},\mathrm{3},\mathrm{7},\mathrm{1},\mathrm{4},\mathrm{6},\mathrm{8}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\noindent em que se vê como os níveis \ensuremath{\mathrm{5}}, depois \ensuremath{\mathrm{3},\mathrm{7}} e finalmente \ensuremath{\mathrm{1},\mathrm{4},\mathrm{6},\mathrm{8}} foram percorridos.
+
+Pretendemos propor duas versões dessa função:
+
+\begin{enumerate}
+\item	Uma delas envolve um catamorfismo de \ensuremath{{\BTree}}s:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{bfsLevels}\mathbin{::}{\BTree}\;\Varid{a}\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{bfsLevels}\mathrel{=}\Varid{concat}\comp \Varid{levels}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+Complete a definição desse catamorfismo:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{levels}\mathbin{::}{\BTree}\;\Varid{a}\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{levels}\mathrel{=}\llparenthesis\, \Varid{glevels}\,\rrparenthesis{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\item A segunda proposta,
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{bft}\mathbin{::}{\BTree}\;\Varid{a}\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+deverá basear-se num anamorfismo de listas.
+\end{enumerate}
+\textbf{Sugestão}: estudar o artigo \cite{Ok00} cujo PDF está incluído no material deste trabalho. 
+Quando fizer testes ao seu código pode, se desejar, usar funções disponíveis na biblioteca
+\ensuremath{{\Exp}} para visualizar as árvores em \graphviz{GraphViz} (formato \emph{.dot}).
+
+Justifique devidamente a sua resolução, que deverá vir acompanhada de diagramas explicativos.
+Como já se disse, valoriza-se a escrita de \emph{pouco} código que corresponda a soluções
+simples e elegantes que utilizem os combinadores de ordem superior estudados
+na disciplina.
+
+\Problema
+
+Considere a seguinte função em Haskell:
+\begin{quote}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{32}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{39}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{46}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{52}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{f}\;\Varid{x}\mathrel{=}\Varid{wrapper}\comp \Varid{worker}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{10}{}\<[10]%
+\>[10]{}\Varid{wrapper}\mathrel{=}\Varid{head}{}\<[E]%
+\\
+\>[B]{}\hsindent{10}{}\<[10]%
+\>[10]{}\Varid{worker}\;\mathrm{0}\mathrel{=}\Varid{start}\;\Varid{x}{}\<[E]%
+\\
+\>[B]{}\hsindent{10}{}\<[10]%
+\>[10]{}\Varid{worker}\;(\Varid{n}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{loop}\;\Varid{x}\;(\Varid{worker}\;\Varid{n}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{loop}\;\Varid{x}\;{}\<[11]%
+\>[11]{}[\mskip1.5mu \Varid{s},{}\<[23]%
+\>[23]{}\Varid{h},{}\<[32]%
+\>[32]{}\Varid{k},{}\<[39]%
+\>[39]{}\Varid{j},{}\<[46]%
+\>[46]{}\Varid{m}{}\<[52]%
+\>[52]{}\mskip1.5mu]\mathrel{=}{}\<[E]%
+\\
+\>[11]{}[\mskip1.5mu \Varid{h}\mathbin{/}\Varid{k}\mathbin{+}\Varid{s},\Varid{x}\mathbin{\uparrow}\mathrm{2}\mathbin{*}\Varid{h},\Varid{k}\mathbin{*}\Varid{j},\Varid{j}\mathbin{+}\Varid{m},\Varid{m}\mathbin{+}\mathrm{8}\mskip1.5mu]{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{start}\;\Varid{x}\mathrel{=}[\mskip1.5mu \Varid{x},{}\<[23]%
+\>[23]{}\Varid{x}\mathbin{\uparrow}\mathrm{3},{}\<[32]%
+\>[32]{}\mathrm{6},{}\<[39]%
+\>[39]{}\mathrm{20},{}\<[46]%
+\>[46]{}\mathrm{22}{}\<[52]%
+\>[52]{}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\end{quote}
+Pode-se provar pela lei de recursividade mútua que \ensuremath{\Varid{f}\;\Varid{x}\;\Varid{n}} calcula o seno hiperbólico de \ensuremath{\Varid{x}},
+\ensuremath{\Varid{sinh}\;\Varid{x}}, para \ensuremath{\Varid{n}} aproximações da sua série de Taylor. 
+Faça a derivação da função dada a partir da referida série de Taylor, apresentando
+todos os cálculos justificativos, tal como se faz para outras funções no
+capítulo respectivo do texto base desta UC \cite{Ol98-24}.
+
+\Problema
+
+A propor na 2ª edição deste enunciado.
+
+\Problema
+
+A propor na 2ª edição deste enunciado.
+
+\part*{Anexos}
+
+\appendix
+
+\section{Natureza do trabalho a realizar}
+\label{sec:documentacao}
+Este trabalho teórico-prático deve ser realizado por grupos de 3 alunos.
+Os detalhes da avaliação (datas para submissão do relatório e sua defesa
+oral) são os que forem publicados na \cp{página da disciplina} na \emph{internet}.
+
+Recomenda-se uma abordagem participativa dos membros do grupo em \textbf{todos}
+os exercícios do trabalho, para assim poderem responder a qualquer questão
+colocada na \emph{defesa oral} do relatório.
+
+Para cumprir de forma integrada os objectivos do trabalho vamos recorrer
+a uma técnica de programa\-ção dita ``\litp{literária}'' \cite{Kn92}, cujo
+princípio base é o seguinte:
+%
+\begin{quote}\em
+        Um programa e a sua documentação devem coincidir.
+\end{quote}
+%
+Por outras palavras, o \textbf{código fonte} e a \textbf{documentação} de um
+programa deverão estar no mesmo ficheiro.
+
+O ficheiro \texttt{cp2526t.pdf} que está a ler é já um exemplo de
+\litp{programação literária}: foi gerado a partir do texto fonte
+\texttt{cp2526t.lhs}\footnote{O sufixo `lhs' quer dizer
+\emph{\lhaskell{literate Haskell}}.} que encontrará no \MaterialPedagogico\
+desta disciplina des\-com\-pactando o ficheiro \texttt{cp2526t.zip}.
+
+Como se mostra no esquema abaixo, de um único ficheiro (\ensuremath{\Varid{lhs}})
+gera-se um PDF ou faz-se a interpretação do código \Haskell\ que ele inclui:
+
+        \esquema
+
+Vê-se assim que, para além do \GHCi, serão necessários os executáveis \PdfLatex\ e
+\LhsToTeX. Para facilitar a instalação e evitar problemas de versões e
+conflitos com sistemas operativos, é recomendado o uso do \Docker\ tal como
+a seguir se descreve.
+
+\section{Docker} \label{sec:docker}
+
+Recomenda-se o uso do \container\ cuja imagem é gerada pelo \Docker\ a partir do ficheiro
+\texttt{Dockerfile} que se encontra na diretoria que resulta de descompactar
+\texttt{cp2526t.zip}. Este \container\ deverá ser usado na execução
+do \GHCi\ e dos comandos relativos ao \Latex. (Ver também a \texttt{Makefile}
+que é disponibilizada.)
+
+Após \href{https://docs.docker.com/engine/install/}{instalar o Docker} e
+descarregar o referido zip com o código fonte do trabalho,
+basta executar os seguintes comandos:
+\begin{Verbatim}[fontsize=\small]
+    $ docker build -t cp2526t .
+    $ docker run -v ${PWD}:/cp2526t -it cp2526t
+\end{Verbatim}
+\textbf{NB}: O objetivo é que o container\ seja usado \emph{apenas} 
+para executar o \GHCi\ e os comandos relativos ao \Latex.
+Deste modo, é criado um \textit{volume} (cf.\ a opção \texttt{-v \$\{PWD\}:/cp2526t}) 
+que permite que a diretoria em que se encontra na sua máquina local 
+e a diretoria \texttt{/cp2526t} no \container\ sejam partilhadas.
+
+Pretende-se então que visualize/edite os ficheiros na sua máquina local e que
+os compile no \container, executando:
+\begin{Verbatim}[fontsize=\small]
+    $ lhs2TeX cp2526t.lhs > cp2526t.tex
+    $ pdflatex cp2526t
+\end{Verbatim}
+\LhsToTeX\ é o pre-processador que faz ``pretty printing'' de código Haskell
+em \Latex\ e que faz parte já do \container. Alternativamente, basta executar
+\begin{Verbatim}[fontsize=\small]
+    $ make
+\end{Verbatim}
+para obter o mesmo efeito que acima.
+
+Por outro lado, o mesmo ficheiro \texttt{cp2526t.lhs} é executável e contém
+o ``kit'' básico, escrito em \Haskell, para realizar o trabalho. Basta executar
+\begin{Verbatim}[fontsize=\small]
+    $ ghci cp2526t.lhs
+\end{Verbatim}
+
+\noindent Abra o ficheiro \texttt{cp2526t.lhs} no seu editor de texto preferido
+e verifique que assim é: todo o texto que se encontra dentro do ambiente
+\begin{quote}\small\tt
+\text{\ttfamily \char92{}begin\char123{}code\char125{}}
+\\ ... \\
+\text{\ttfamily \char92{}end\char123{}code\char125{}}
+\end{quote}
+é seleccionado pelo \GHCi\ para ser executado.
+
+\section{Em que consiste o TP}
+
+Em que consiste, então, o \emph{relatório} a que se referiu acima?
+É a edição do texto que está a ser lido, preenchendo o anexo \ref{sec:resolucao}
+com as respostas. O relatório deverá conter ainda a identificação dos membros
+do grupo de trabalho, no local respectivo da folha de rosto.
+
+Para gerar o PDF integral do relatório deve-se ainda correr os comando seguintes,
+que actualizam a bibliografia (com \Bibtex) e o índice remissivo (com \Makeindex),
+\begin{Verbatim}[fontsize=\small]
+    $ bibtex cp2526t.aux
+    $ makeindex cp2526t.idx
+\end{Verbatim}
+e recompilar o texto como acima se indicou. (Como já se disse, pode fazê-lo
+correndo simplesmente \texttt{make} no \container.)
+
+No anexo \ref{sec:codigo} disponibiliza-se algum código \Haskell\ relativo
+aos problemas que são colocados. Esse anexo deverá ser consultado e analisado
+à medida que isso for necessário.
+
+Deve ser feito uso da \litp{programação literária} para documentar bem o código que se
+desenvolver, em particular fazendo diagramas explicativos do que foi feito e
+tal como se explica no anexo \ref{sec:diagramas} que se segue.
+
+\section{Como exprimir cálculos e diagramas em LaTeX/lhs2TeX} \label{sec:diagramas}
+
+Como primeiro exemplo, estudar o texto fonte (\lhstotex{lhs}) do que está a ler\footnote{
+Procure e.g.\ por \texttt{"sec:diagramas"}.} onde se obtém o efeito seguinte:\footnote{Exemplos
+tirados de \cite{Ol98-24}.}
+\begin{eqnarray*}
+\start
+\ensuremath{\Varid{id}\mathrel{=}\conj{\Varid{f}}{\Varid{g}}}
+\just\equiv{ universal property }
+\ensuremath{\begin{lcbr}\p1\comp \Varid{id}\mathrel{=}\Varid{f}\\\p2\comp \Varid{id}\mathrel{=}\Varid{g}\end{lcbr}}
+\just\equiv{ identity }
+\ensuremath{\begin{lcbr}\p1\mathrel{=}\Varid{f}\\\p2\mathrel{=}\Varid{g}\end{lcbr}}
+\qed
+\end{eqnarray*}
+
+Os diagramas podem ser produzidos recorrendo à \emph{package} \Xymatrix, por exemplo:
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\N_0}
+           \ar[d]_-{\ensuremath{\cataNat{\Varid{g}}}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\N_0}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\cataNat{\Varid{g}}}}
+           \ar[l]_-{\ensuremath{\mathsf{in}}}
+\\
+     \ensuremath{\Conid{B}}
+&
+     \ensuremath{\mathrm{1}\mathbin{+}\Conid{B}}
+           \ar[l]^-{\ensuremath{\Varid{g}}}
+}
+\end{eqnarray*}
+
+\section{Código fornecido}\label{sec:codigo}
+
+\subsection*{Problema 1}
+
+Árvores exemplo:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}t_1 \mathbin{::}{\BTree}\;\Conid{Int}{}\<[E]%
+\\
+\>[B]{}t_1 \mathrel{=}\Conid{Node}\;(\mathrm{5},(\Conid{Node}\;(\mathrm{3},(\Conid{Node}\;(\mathrm{1},(\Conid{Empty},\Conid{Empty})),\Conid{Node}\;(\mathrm{4},(\Conid{Empty},\Conid{Empty})))),{}\<[E]%
+\\
+\>[B]{}\hsindent{12}{}\<[12]%
+\>[12]{}\Conid{Node}\;(\mathrm{7},(\Conid{Node}\;(\mathrm{6},(\Conid{Empty},\Conid{Empty})),\Conid{Node}\;(\mathrm{8},(\Conid{Empty},\Conid{Empty})))))){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}t_2 \mathbin{::}{\BTree}\;\Conid{Int}{}\<[E]%
+\\
+\>[B]{}t_2 \mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{node}\;\mathrm{1}\;{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}(\Varid{node}\;\mathrm{2}\;(\Varid{node}\;\mathrm{4}\;\Conid{Empty}\;\Conid{Empty})\;(\Varid{node}\;\mathrm{5}\;\Conid{Empty}\;\Conid{Empty}))\;{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}(\Varid{node}\;\mathrm{3}\;(\Varid{node}\;\mathrm{6}\;\Conid{Empty}\;\Conid{Empty})\;(\Varid{node}\;\mathrm{7}\;\Conid{Empty}\;\Conid{Empty})){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}t_3 \mathbin{::}{\BTree}\;\Conid{Char}{}\<[E]%
+\\
+\>[B]{}t_3 \mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{node}\;\text{\ttfamily 'A'}\;{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}(\Varid{node}\;\text{\ttfamily 'B'}\;(\Varid{node}\;\text{\ttfamily 'C'}\;(\Varid{node}\;\text{\ttfamily 'D'}\;\Conid{Empty}\;\Conid{Empty})\;\Conid{Empty})\;\Conid{Empty})\;{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}(\Varid{node}\;\text{\ttfamily 'E'}\;\Conid{Empty}\;\Conid{Empty}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}t_4 \mathbin{::}{\BTree}\;\Conid{Char}{}\<[E]%
+\\
+\>[B]{}t_4 \mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{node}\;\text{\ttfamily 'A'}\;{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}(\Varid{node}\;\text{\ttfamily 'B'}\;(\Varid{node}\;\text{\ttfamily 'C'}\;(\Varid{node}\;\text{\ttfamily 'D'}\;\Conid{Empty}\;\Conid{Empty})\;\Conid{Empty})\;\Conid{Empty})\;{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Conid{Empty}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}t_5 \mathbin{::}{\BTree}\;\Conid{Int}{}\<[E]%
+\\
+\>[B]{}t_5 \mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{node}\;\mathrm{1}\;{}\<[E]%
+\\
+\>[3]{}\hsindent{1}{}\<[4]%
+\>[4]{}(\Varid{node}\;\mathrm{2}\;(\Varid{node}\;\mathrm{4}\;\Conid{Empty}\;\Conid{Empty})\;\Conid{Empty})\;{}\<[E]%
+\\
+\>[3]{}\hsindent{1}{}\<[4]%
+\>[4]{}(\Varid{node}\;\mathrm{3}\;\Conid{Empty}\;(\Varid{node}\;\mathrm{5}\;(\Varid{node}\;\mathrm{6}\;\Conid{Empty}\;\Conid{Empty})\;\Conid{Empty})){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{node}\;\Varid{a}\;\Varid{b}\;\Varid{c}\mathrel{=}\Conid{Node}\;(\Varid{a},(\Varid{b},\Varid{c})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+%----------------- Soluções dos alunos -----------------------------------------%
+
+\section{Soluções dos alunos}\label{sec:resolucao}
+Os alunos devem colocar neste anexo as suas soluções para os exercícios
+propostos, de acordo com o ``layout'' que se fornece.
+Não podem ser alterados os nomes ou tipos das funções dadas, mas pode ser
+adicionado texto ao anexo, bem como diagramas e/ou outras funções auxiliares
+que sejam necessárias.
+
+\noindent
+\textbf{Importante}: Não pode ser alterado o texto deste ficheiro fora deste anexo.
+
+\subsection*{Problema 1}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{21}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{29}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{30}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{34}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{36}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{37}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{45}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{47}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{49}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{61}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{62}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{concatPointWise}\mathbin{::}[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{concatPointWise}\;[\mskip1.5mu \mskip1.5mu]\;\Varid{ys}\mathrel{=}\Varid{ys}{}\<[E]%
+\\
+\>[B]{}\Varid{concatPointWise}\;\Varid{xs}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}\Varid{xs}{}\<[E]%
+\\
+\>[B]{}\Varid{concatPointWise}\;(\Varid{x}\mathbin{:}\Varid{xs})\;(\Varid{y}\mathbin{:}\Varid{ys})\mathrel{=}(\Varid{x}\mathbin{+\!\!+}\Varid{y})\mathbin{:}\Varid{concatPointWise}\;\Varid{xs}\;\Varid{ys}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{concatPointFree}\mathbin{::}[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{concatPointFree}\mathrel{=}\overline{\anaList{\Varid{gene}}}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{gene}\mathrel{=}\alt{\alt{\Varid{g1}}{\Varid{g2}}}{\alt{\Varid{g3}}{\Varid{g4}}}\comp (\Varid{distr}+\Varid{distr})\comp \Varid{distl}\comp (\Varid{outList}\times\Varid{outList}){}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{g1}\mathrel{=}i_1\comp \underline{}{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{g2}\mathrel{=}i_2\comp (\Varid{id}\times\conj{\Varid{nil}}{\Varid{id}})\comp \p2{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{g3}\mathrel{=}i_2\comp (\Varid{id}\times\conj{\Varid{id}}{\Varid{nil}})\comp \p1{}\<[E]%
+\\
+\>[5]{}\hsindent{4}{}\<[9]%
+\>[9]{}\Varid{g4}\mathrel{=}i_2\comp \conj{\mathsf{conc}\comp (\p1\times\p1)}{\p2\times\p2}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\mbox{\onelinecomment  Definição da Condicional (dada no enunciado)}{}\<[E]%
+\\
+\>[B]{}\mbox{\onelinecomment  cond p f g = (either f g) . (grd p)}{}\<[E]%
+\\
+\>[B]{}\Varid{concatCondicional}\mathbin{::}[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{concatCondicional}\mathrel{=}\overline{\anaList{\Varid{gene}}}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\mbox{\onelinecomment  O Gene: Uma cadeia de condicionais (If-Else-If...)}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{gene}\mathrel{=}\Varid{cond}\;\Varid{ambasVazias}\;{}\<[36]%
+\>[36]{}\mbox{\onelinecomment  if both empty}{}\<[E]%
+\\
+\>[7]{}\hsindent{8}{}\<[15]%
+\>[15]{}\Varid{stop}\;{}\<[37]%
+\>[37]{}\mbox{\onelinecomment  stop}{}\<[E]%
+\\
+\>[7]{}\hsindent{8}{}\<[15]%
+\>[15]{}(\Varid{cond}\;\Varid{listaEsquerdaVazia}\;{}\<[47]%
+\>[47]{}\mbox{\onelinecomment  if left list}{}\<[E]%
+\\
+\>[15]{}\hsindent{4}{}\<[19]%
+\>[19]{}\Varid{doListaDireita}\;{}\<[49]%
+\>[49]{}\mbox{\onelinecomment  Se só L1 vazia -> Processa L2}{}\<[E]%
+\\
+\>[15]{}\hsindent{4}{}\<[19]%
+\>[19]{}(\Varid{cond}\;\Varid{listaDireitaVazia}\;{}\<[47]%
+\>[47]{}\mbox{\onelinecomment  if right list}{}\<[E]%
+\\
+\>[19]{}\hsindent{2}{}\<[21]%
+\>[21]{}\Varid{doListaEsquerda}\;{}\<[45]%
+\>[45]{}\mbox{\onelinecomment  Se só L2 vazia -> Processa L1}{}\<[E]%
+\\
+\>[19]{}\hsindent{2}{}\<[21]%
+\>[21]{}\Varid{doAmbas})){}\<[34]%
+\>[34]{}\mbox{\onelinecomment  Senão -> Processa ambas (caso x:xs, y:ys)}{}\<[E]%
+\\[\blanklineskip]%
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\mbox{\onelinecomment  1. Predicados}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{ambasVazias}\mathrel{=}\uncurry{(\mathrel{\wedge})}\comp (\Varid{null}\times\Varid{null})\mbox{\onelinecomment  ([], [])?}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{listaEsquerdaVazia}{}\<[30]%
+\>[30]{}\mathrel{=}\Varid{null}\comp \p1{}\<[62]%
+\>[62]{}\mbox{\onelinecomment  ([], ...)?}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{listaDireitaVazia}{}\<[29]%
+\>[29]{}\mathrel{=}\Varid{null}\comp \p2{}\<[61]%
+\>[61]{}\mbox{\onelinecomment  (..., [])?}{}\<[E]%
+\\[\blanklineskip]%
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\mbox{\onelinecomment  2. Ações (Os ramos)}{}\<[E]%
+\\[\blanklineskip]%
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\mbox{\onelinecomment  Caso Paragem: Devolve Left ()}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{stop}\mathrel{=}i_1\comp \underline{}{}\<[E]%
+\\[\blanklineskip]%
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\mbox{\onelinecomment  Caso L1 Vazia ([], y:ys): Produz y, estado ([], ys)}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\mbox{\onelinecomment  Nota: Usamos head/tail porque o predicado garante que não é vazia}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{doListaDireita}\mathrel{=}i_2\comp \conj{\Varid{head}\comp \p2}{\conj{\Varid{nil}}{\Varid{tail}\comp \p2}}{}\<[E]%
+\\[\blanklineskip]%
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\mbox{\onelinecomment  Caso L2 Vazia (x:xs, []): Produz x, estado (xs, [])}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{doListaEsquerda}\mathrel{=}i_2\comp \conj{\Varid{head}\comp \p1}{\conj{\Varid{tail}\comp \p1}{\Varid{nil}}}{}\<[E]%
+\\[\blanklineskip]%
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\mbox{\onelinecomment  Caso Ambas Cheias (x:xs, y:ys): Produz x++y, estado (xs, ys)}{}\<[E]%
+\\
+\>[5]{}\hsindent{2}{}\<[7]%
+\>[7]{}\Varid{doAmbas}\mathrel{=}i_2\comp \conj{\mathsf{conc}\comp (\Varid{head}\times\Varid{head})}{\Varid{tail}\times\Varid{tail}}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\mbox{\onelinecomment  Define helper e uma árvore de teste (cola isto no GHCi)}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{glevelsPointWise}\mathbin{::}()+(\Varid{a},([\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu],[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]))\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{glevelsPointWise}\;(i_1\;())\mathrel{=}[\mskip1.5mu \mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{glevelsPointWise}\;(i_2\;(\Varid{a},(\Varid{ls},\Varid{rs})))\mathrel{=}[\mskip1.5mu \Varid{a}\mskip1.5mu]\mathbin{:}\Varid{concatPointWise}\;\Varid{ls}\;\Varid{rs}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{glevelsPointFree}\mathbin{::}()+(\Varid{a},([\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu],[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]))\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{glevelsPointFree}\mathrel{=}\alt{\Varid{nil}}{\Varid{cons}\comp (\Varid{singl}\times\uncurry{\Varid{concatPointFree}})}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{genePointFree}\mathbin{::}[\mskip1.5mu {\BTree}\;\Varid{a}\mskip1.5mu]\to ()+(\Varid{a},[\mskip1.5mu {\BTree}\;\Varid{a}\mskip1.5mu]){}\<[E]%
+\\
+\>[B]{}\Varid{genePointFree}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}i_1\;(){}\<[E]%
+\\
+\>[B]{}\Varid{genePointFree}\;(\Conid{Empty}\mathbin{:}\Varid{ts})\mathrel{=}\Varid{genePointFree}\;\Varid{ts}{}\<[E]%
+\\
+\>[B]{}\Varid{genePointFree}\;(\Conid{Node}\;(\Varid{a},(\Varid{l},\Varid{r}))\mathbin{:}\Varid{ts})\mathrel{=}i_2\;(\Varid{a},\Varid{ts}\mathbin{+\!\!+}[\mskip1.5mu \Varid{l},\Varid{r}\mskip1.5mu]){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{genePointWise}\mathbin{::}[\mskip1.5mu {\BTree}\;\Varid{a}\mskip1.5mu]\to ()+(\Varid{a},[\mskip1.5mu {\BTree}\;\Varid{a}\mskip1.5mu]){}\<[E]%
+\\
+\>[B]{}\Varid{genePointWise}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}i_1\;(){}\<[E]%
+\\
+\>[B]{}\Varid{genePointWise}\;(\Conid{Empty}\mathbin{:}\Varid{ts})\mathrel{=}\Varid{genePointWise}\;\Varid{ts}{}\<[E]%
+\\
+\>[B]{}\Varid{genePointWise}\;(\Conid{Node}\;(\Varid{a},(\Varid{l},\Varid{r}))\mathbin{:}\Varid{ts})\mathrel{=}\Varid{gNode}\;(\Varid{a},(\Varid{ts},(\Varid{l},\Varid{r}))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mathbf{where}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{gNode}\mathrel{=}i_2{}\<[E]%
+\\
+\>[5]{}\hsindent{6}{}\<[11]%
+\>[11]{}\comp (\Varid{id}\times\mathsf{conc}){}\<[E]%
+\\
+\>[5]{}\hsindent{6}{}\<[11]%
+\>[11]{}\comp (\Varid{id}\times(\Varid{id}\times\mathsf{conc})){}\<[E]%
+\\
+\>[5]{}\hsindent{6}{}\<[11]%
+\>[11]{}\comp (\Varid{id}\times(\Varid{id}\times(\Varid{singl}\times\Varid{singl}))){}\<[E]%
+\\
+\>[B]{}\mbox{\onelinecomment  g1 . cons.(Node >< id).assocr.(id >< swap) = i2. (id >< conc) . (id >< (id >< conc)) . (id >< (id >< (singl >< singl)))}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{bft}\;\Varid{t}\mathrel{=}\anaList{\Varid{genePointWise}}\;(\Varid{singl}\;\Varid{t}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection*{Problema 2}
+
+\subsection*{Problema 3}
+
+\subsection*{Problema 4}
+
+%----------------- Índice remissivo (exige makeindex) -------------------------%
+
+\printindex
+
+%----------------- Bibliografia (exige bibtex) --------------------------------%
+
+\bibliographystyle{plain}
+\bibliography{cp2526t}
+
+%----------------- Fim do documento -------------------------------------------%
+\end{document}
