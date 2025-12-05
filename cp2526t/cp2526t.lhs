@@ -492,6 +492,7 @@ que sejam necessárias.
 
 \begin{code}
 
+-- PROPOSTA A
 
 concatPointWise :: [[a]] -> [[a]] -> [[a]]
 concatPointWise [] ys = ys
@@ -547,40 +548,48 @@ concatCondicional = curry (anaList gene)
 
 
 
--- Define helper e uma árvore de teste (cola isto no GHCi)
 
 
 glevelsPointWise :: Either () (a, ([ [a] ], [ [a] ])) -> [[a]]
 glevelsPointWise (Left ()) = []
 glevelsPointWise (Right (a, (ls, rs))) = [a] : concatPointWise ls rs
 
-glevelsPointFree :: Either () (a, ([ [a] ], [ [a] ])) -> [[a]]
-glevelsPointFree = either (nil) (cons.(singl >< (uncurry concatPointFree)))
+glevels :: Either () (a, ([ [a] ], [ [a] ])) -> [[a]]
+glevels = either (nil) (cons.(singl >< (uncurry concatPointFree)))
 
+
+
+
+-- PROPOSTA B
+
+genePointWise :: [BTree a] -> Either () (a, [BTree a])
+genePointWise [] = i1 ()
+genePointWise (Empty:ts) = genePointWise ts
+genePointWise (Node (a,(l,r)):ts) = i2 (a, ts ++ [l,r])
 
 
 genePointFree :: [BTree a] -> Either () (a, [BTree a])
-genePointFree [] = i1 ()
-genePointFree (Empty:ts) = genePointFree ts
-genePointFree (Node (a,(l,r)):ts) = i2 (a, ts ++ [l,r])
-
-genePointWise :: [BTree a] -> Either () (a, [BTree a])
-genePointWise [] = i1 () 
-genePointWise (Empty:ts) = genePointWise ts
-genePointWise (Node (a,(l,r)):ts) = gNode (a, (ts, (l, r)))
-  where
-    gNode = i2 
-          . (id >< conc) 
-          . (id >< (id >< conc)) 
-          . (id >< (id >< (singl >< singl)))
--- g1 . cons.(Node >< id).assocr.(id >< swap) = i2. (id >< conc) . (id >< (id >< conc)) . (id >< (id >< (singl >< singl)))
+genePointFree = either
+                (i1 . const ()) --Lista vazia
+                (either (genePointFree . p2) gCasoNode -- Lista com Empty na cabeça ou Node
+                  . distl)
+                . (id -|- (outBTree >< id))  -- Aplica o out da BTree
+                . outList -- Aplica o out da Lista 
+      where
+        gCasoNode = i2 
+          . (id >< conc)                -- 5. Junta a lista antiga com a dos filhos
+          . (id >< (id >< cons.(id >< singl)))   -- 4. Converte o par (l,r) em lista [l,r]
+          . (id >< swap)                -- 3. Troca ordem: ((l,r), ts) -> (ts, (l,r))
+          . assocr
 
 
-bft t = anaList genePointWise (singl t)
+bft t = anaList genePointFree (singl t)
  
 \end{code}
 
 \subsection*{Problema 2}
+
+Dá para fazer 
 
 \subsection*{Problema 3}
 
