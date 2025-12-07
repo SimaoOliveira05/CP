@@ -1,5 +1,9 @@
 \documentclass[11pt, a4paper, fleqn]{article}
 \usepackage{cp2526t}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{array}
+\usetikzlibrary{positioning}
 \makeindex
 
 %================= lhs2tex=====================================================%
@@ -265,12 +269,13 @@
 %%format (bin (n) (k)) = "\Big(\vcenter{\xymatrix@R=1pt{" n "\\" k "}}\Big)"
 %------------------------------------------------------------------------------%
 
+
 %====== DEFINIR GRUPO E ELEMENTOS =============================================%
 
-\group{G99}
-\studentA{xxxxxx}{Nome }
-\studentB{xxxxxx}{Nome }
-\studentC{xxxxxx}{Nome }
+\group{G31}
+\studentA{107291}{Gabriel Pinto Dantas}
+\studentB{106937}{José Lourenço Ferreira Fernandes}
+\studentC{107322}{Simão Azevedo Oliveira}
 
 %==============================================================================%
 
@@ -318,8 +323,9 @@ importante e diferenciadora da avaliação.
 
 
 \Problema
+
 Uma serialização (ou travessia) de uma árvore é uma sua representação sob a forma de uma lista. 
-Na biblioteca \ensuremath{{\BTree}} encontram-se as funções de serialização \ensuremath{\Varid{inordt}}, \ensuremath{\Varid{preordt}} e \ensuremath{\Varid{postordt}},
+Na biblioteca \ensuremath{\Conid{BTree}} encontram-se as funções de serialização \ensuremath{\Varid{inordt}}, \ensuremath{\Varid{preordt}} e \ensuremath{\Varid{postordt}},
 que fazem as travessias \emph{in-order}, \emph{ pre-order} e \emph{post-order}, respectivamente.
 Todas essas travessias são catamorfismos que percorrem a árvore argumento em regime \emph{depth-first}.
 
@@ -346,11 +352,11 @@ Por exemplo, para a árvore \ensuremath{t_1 } dada em anexo e mostrada na figura
 Pretendemos propor duas versões dessa função:
 
 \begin{enumerate}
-\item	Uma delas envolve um catamorfismo de \ensuremath{{\BTree}}s:
+\item	Uma delas envolve um catamorfismo de \ensuremath{\Conid{BTree}}s:
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{bfsLevels}\mathbin{::}{\BTree}\;\Varid{a}\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
+\>[B]{}\Varid{bfsLevels}\mathbin{::}\Conid{BTree}\;\Varid{a}\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
 \\
 \>[B]{}\Varid{bfsLevels}\mathrel{=}\Varid{concat}\comp \Varid{levels}{}\<[E]%
 \ColumnHook
@@ -359,7 +365,7 @@ Complete a definição desse catamorfismo:
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{levels}\mathbin{::}{\BTree}\;\Varid{a}\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\>[B]{}\Varid{levels}\mathbin{::}\Conid{BTree}\;\Varid{a}\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
 \\
 \>[B]{}\Varid{levels}\mathrel{=}\llparenthesis\, \Varid{glevels}\,\rrparenthesis{}\<[E]%
 \ColumnHook
@@ -368,19 +374,21 @@ Complete a definição desse catamorfismo:
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{bft}\mathbin{::}{\BTree}\;\Varid{a}\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
+\>[B]{}\Varid{bft}\mathbin{::}\Conid{BTree}\;\Varid{a}\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 deverá basear-se num anamorfismo de listas.
 \end{enumerate}
 \textbf{Sugestão}: estudar o artigo \cite{Ok00} cujo PDF está incluído no material deste trabalho. 
 Quando fizer testes ao seu código pode, se desejar, usar funções disponíveis na biblioteca
-\ensuremath{{\Exp}} para visualizar as árvores em \graphviz{GraphViz} (formato \emph{.dot}).
+\ensuremath{\Conid{Exp}} para visualizar as árvores em GraphViz (formato .dot).
 
 Justifique devidamente a sua resolução, que deverá vir acompanhada de diagramas explicativos.
 Como já se disse, valoriza-se a escrita de \emph{pouco} código que corresponda a soluções
 simples e elegantes que utilizem os combinadores de ordem superior estudados
 na disciplina.
+
+
 
 \Problema
 
@@ -428,17 +436,153 @@ Considere a seguinte função em Haskell:
 \end{quote}
 Pode-se provar pela lei de recursividade mútua que \ensuremath{\Varid{f}\;\Varid{x}\;\Varid{n}} calcula o seno hiperbólico de \ensuremath{\Varid{x}},
 \ensuremath{\Varid{sinh}\;\Varid{x}}, para \ensuremath{\Varid{n}} aproximações da sua série de Taylor. 
-Faça a derivação da função dada a partir da referida série de Taylor, apresentando
-todos os cálculos justificativos, tal como se faz para outras funções no
-capítulo respectivo do texto base desta UC \cite{Ol98-24}.
+Faça a derivação da função dada a partir da referida série de Taylor, apresentando todos os cálculos justificativos, tal como se faz para outras funções no capítulo respectivo do texto base desta UC \cite{Ol98-24}.
 
 \Problema
 
-A propor na 2ª edição deste enunciado.
+Quem em Braga observar, ao fim da tarde, o tráfego onde a Avenida Clairmont
+Fernand se junta à N101, aproximadamente na coordenada \href{https://maps.app.goo.gl/uCbXLsdibYoochr36}{41°33'46.8"N
+8°24'32.4"W} --- ver as setas da figura que se segue --- reparará nas sequências
+imparáveis (infinitas!) de veículos provenientes dessas vias de circulação.
+
+Mas também irá observar um comportamento interessante por parte dos condutores desses
+veículos: por regra, \emph{cada carro numa via deixa passar, à sua frente, exactamente outro carro da outra via}. 
+
+\begin{center}
+	\mapa
+\end{center}
+
+Este comportamento \emph{civilizado} chama-se \emph{fair-merge} (ou \emph{fair-interleaving})
+de duas sequências infinitas, também designadas \emph{streams} em ciência
+da computação. Seja dado o tipo dessas sequências em Haskell,
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{data}\;\Conid{Stream}\;\Varid{a}\mathrel{=}\Conid{Cons}\;(\Varid{a},\Conid{Stream}\;\Varid{a})\;\mathbf{deriving}\;\Conid{Show}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+para o qual se define também:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathsf{out}\;(\Conid{Cons}\;(\Varid{x},\Varid{xs}))\mathrel{=}(\Varid{x},\Varid{xs}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+\noindent O referido comportamento civilizado pode definir-se, em Haskell,
+da forma seguinte:\footnote{O facto das sequências serem infinitas não nos
+deve preocupar, pois em Haskell isso é lidado de forma transparente por \lazy{lazy
+evaluation}.}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{fair\char95 merge}\mathbin{::}(\Conid{Stream}\;\Varid{a},\Conid{Stream}\;\Varid{a})+(\Conid{Stream}\;\Varid{a},\Conid{Stream}\;\Varid{a})\to \Conid{Stream}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{fair\char95 merge}\mathrel{=}\alt{\Varid{h}}{\Varid{k}}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}\Varid{h}\;(\Conid{Cons}\;(\Varid{x},\Varid{xs}),\Varid{y})\mathrel{=}\Conid{Cons}\;(\Varid{x},\Varid{k}\;(\Varid{xs},\Varid{y})){}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}\Varid{k}\;(\Varid{x},\Conid{Cons}\;(\Varid{y},\Varid{ys}))\mathrel{=}\Conid{Cons}\;(\Varid{y},\Varid{h}\;(\Varid{x},\Varid{ys})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Defina \ensuremath{\Varid{fair\char95 merge}} como um \textbf{anamorfismo} de \ensuremath{\Conid{Stream}}s, usando o combinador
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\lanabracket\,\Varid{g}\,\ranabracket\mathrel{=}\Conid{Cons}\comp (\Varid{id}\times\lanabracket\,\Varid{g}\,\ranabracket)\comp \Varid{g}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+e a seguinte estratégia:
+\begin{itemize}
+\item	Derivar a lei \textbf{dual} da recursividade mútua,
+\begin{eqnarray}
+	\ensuremath{\alt{\Varid{f}}{\Varid{g}}\mathrel{=}\ana{\alt{\Varid{h}}{\Varid{k}}}} & \equiv & \ensuremath{\begin{lcbr}\Varid{out}\comp \Varid{f}\mathrel{=}\fun F \;\alt{\Varid{f}}{\Varid{g}}\comp \Varid{h}\\\Varid{out}\comp \Varid{g}\mathrel{=}\fun F \;\alt{\Varid{f}}{\Varid{g}}\comp \Varid{k}\end{lcbr}}
+	\label{eq:fokkinga_dual}
+\end{eqnarray}
+	tal como se fez, nas aulas, para a que está no formulário.
+\item
+	Usar (\ref{eq:fokkinga_dual}) na resolução do problema proposto. 
+\end{itemize}
+Justificar devidamente a resolução, que deverá vir acompanhada de diagramas explicativos.
 
 \Problema
 
-A propor na 2ª edição deste enunciado.
+Como se sabe, é possível pensarmos em catamorfismos, anamorfismos etc \emph{probabilísticos},
+quer dizer, programas recursivos que dão distribuições como resultados. Por
+exemplo, podemos pensar num combinador
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pcataList}\mathbin{::}(()+(\Varid{a},\Varid{b})\to \fun{Dist}\;\Varid{b})\to [\mskip1.5mu \Varid{a}\mskip1.5mu]\to \fun{Dist}\;\Varid{b}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+que é muito parecido com
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\llparenthesis\, \cdot \,\rrparenthesis\mathbin{::}(()+(\Varid{a},\Varid{b})\to \Varid{b})\to [\mskip1.5mu \Varid{a}\mskip1.5mu]\to \Varid{b}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+da biblioteca \List. A principal diferença é que o gene de \ensuremath{\Varid{pcataList}} é uma função probabilística.
+
+Como exemplo de utilização, recorde-se que \ensuremath{\llparenthesis\, \alt{\Varid{zero}}{\Varid{add}}\,\rrparenthesis} soma todos
+os elementos da lista argumento, por exemplo:
+\begin{quote}
+\ensuremath{\llparenthesis\, \alt{\Varid{zero}}{\Varid{add}}\,\rrparenthesis\;[\mskip1.5mu \mathrm{20},\mathrm{10},\mathrm{5}\mskip1.5mu]\mathrel{=}\mathrm{35}}.
+\end{quote}
+Considere-se agora a função \ensuremath{\Varid{padd}} (adição probabilística) que,
+com probabilidade $90\%$ soma dois números e com probabilidade $10\%$ os subtrai:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{padd}\;(\Varid{a},\Varid{b})\mathrel{=}\Conid{D}\;[\mskip1.5mu (\Varid{a}\mathbin{+}\Varid{b},\mathrm{0.9}),(\Varid{a}\mathbin{-}\Varid{b},\mathrm{0.1})\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+Se se correr
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{d4}\mathrel{=}\Varid{pcataList}\;\alt{\Varid{pzero}}{\Varid{padd}}\;[\mskip1.5mu \mathrm{20},\mathrm{10},\mathrm{5}\mskip1.5mu]\;\mathbf{where}\;\Varid{pzero}\mathrel{=}\Varid{return}\comp \Varid{zero}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+obter-se-á:
+\begin{Verbatim}[fontsize=\small]
+35  81.0%
+25   9.0%
+ 5   9.0%
+15   1.0%
+\end{Verbatim}
+
+Com base neste exemplo, resolva o seguinte
+\begin{quote}\em
+\textbf{Problema}: Uma unidade militar pretende enviar uma mensagem urgente
+a outra, mas tem o aparelho de telegrafia meio avariado. Por experiência,
+o telegrafista sabe que a probabilidade de uma palavra se perder (não ser
+transmitida) é $5\%$; e que, no final de cada mensagem, o aparelho envia o código
+\ensuremath{\text{\ttfamily \char34 stop\char34}}, mas (por estar meio avariado), falha $10\%$ das vezes.
+
+Qual a probabilidade de a palavra \ensuremath{\text{\ttfamily \char34 atacar\char34}} da mensagem 
+\begin{quote}
+\ensuremath{\Varid{words}\;\text{\ttfamily \char34 Vamos~atacar~hoje\char34}}
+\end{quote}
+se perder, isto é, o resultado da transmissão ser \ensuremath{[\mskip1.5mu \text{\ttfamily \char34 Vamos\char34},\text{\ttfamily \char34 hoje\char34},\text{\ttfamily \char34 stop\char34}\mskip1.5mu]}?
+E a de seguirem todas as palavras, mas faltar o \ensuremath{\text{\ttfamily \char34 stop\char34}} no fim? E a da transmissão
+ser perfeita?
+\end{quote}
+
+Responda a estas perguntas encontrando \ensuremath{\Varid{gene}} tal que
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{transmitir}\mathrel{=}\Varid{pcataList}\;\Varid{gene}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+descreve o comportamento do aparelho.
+Justificar devidamente a resolução, que deverá vir acompanhada de diagramas explicativos.
+%
 
 \part*{Anexos}
 
@@ -586,6 +730,87 @@ Os diagramas podem ser produzidos recorrendo à \emph{package} \Xymatrix, por ex
 }
 \end{eqnarray*}
 
+\section{O mónade das distribuições probabilísticas} \label{sec:probabilities}
+Mónades são functores com propriedades adicionais que nos permitem obter
+efeitos especiais em progra\-mação. Por exemplo, a biblioteca \Probability\
+oferece um mónade para abordar problemas de probabilidades. Nesta biblioteca,
+o conceito de distribuição estatística é captado pelo tipo
+\begin{eqnarray}
+     \ensuremath{\mathbf{newtype}\;\fun{Dist}\;\Varid{a}\mathrel{=}\Conid{D}\;\{\mskip1.5mu \Varid{unD}\mathbin{::}[\mskip1.5mu (\Varid{a},\Conid{ProbRep})\mskip1.5mu]\mskip1.5mu\}}
+     \label{eq:Dist}
+\end{eqnarray}
+em que \ensuremath{\Conid{ProbRep}} é um real de \ensuremath{\mathrm{0}} a \ensuremath{\mathrm{1}}, equivalente a uma escala de $0$ a
+$100 \%$.
+
+Cada par \ensuremath{(\Varid{a},\Varid{p})} numa distribuição \ensuremath{\Varid{d}\mathbin{::}\fun{Dist}\;\Varid{a}} indica que a probabilidade
+de \ensuremath{\Varid{a}} é \ensuremath{\Varid{p}}, devendo ser garantida a propriedade de  que todas as probabilidades
+de \ensuremath{\Varid{d}} somam $100\%$.
+Por exemplo, a seguinte distribuição de classificações por escalões de $A$ a $E$,
+\[
+\begin{array}{ll}
+A & \rule{2mm}{3pt}\ 2\%\\
+B & \rule{12mm}{3pt}\ 12\%\\
+C & \rule{29mm}{3pt}\ 29\%\\
+D & \rule{35mm}{3pt}\ 35\%\\
+E & \rule{22mm}{3pt}\ 22\%\\
+\end{array}
+\]
+será representada pela distribuição
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{d1}\mathbin{::}\fun{Dist}\;\Conid{Char}{}\<[E]%
+\\
+\>[B]{}\Varid{d1}\mathrel{=}\Conid{D}\;[\mskip1.5mu (\text{\ttfamily 'A'},\mathrm{0.02}),(\text{\ttfamily 'B'},\mathrm{0.12}),(\text{\ttfamily 'C'},\mathrm{0.29}),(\text{\ttfamily 'D'},\mathrm{0.35}),(\text{\ttfamily 'E'},\mathrm{0.22})\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+que o \GHCi\ mostrará assim:
+\begin{Verbatim}[fontsize=\small]
+'D'  35.0%
+'C'  29.0%
+'E'  22.0%
+'B'  12.0%
+'A'   2.0%
+\end{Verbatim}
+É possível definir geradores de distribuições, por exemplo distribuições \emph{uniformes},
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{d2}\mathrel{=}\Varid{uniform}\;(\Varid{words}\;\text{\ttfamily \char34 Uma~frase~de~cinco~palavras\char34}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+isto é
+\begin{Verbatim}[fontsize=\small]
+     "Uma"  20.0%
+   "cinco"  20.0%
+      "de"  20.0%
+   "frase"  20.0%
+"palavras"  20.0%
+\end{Verbatim}
+distribuição \emph{normais}, eg.\
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{d3}\mathrel{=}\Varid{normal}\;[\mskip1.5mu \mathrm{10}\mathinner{\ldotp\ldotp}\mathrm{20}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+etc.\footnote{Para mais detalhes ver o código fonte de \Probability, que é uma adaptação da
+biblioteca \PFP\ (``Probabilistic Functional Programming''). Para quem quiser saber mais
+recomenda-se a leitura do artigo \cite{EK06}.}
+\ensuremath{\fun{Dist}} forma um \textbf{mónade} cuja unidade é \ensuremath{\Varid{return}\;\Varid{a}\mathrel{=}\Conid{D}\;[\mskip1.5mu (\Varid{a},\mathrm{1})\mskip1.5mu]} e cuja composição de Kleisli
+é (simplificando a notação)
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[3]{}(\Varid{f}\kcomp \Varid{g})\;\Varid{a}\mathrel{=}[\mskip1.5mu (\Varid{y},\Varid{q}\mathbin{*}\Varid{p})\mid (\Varid{x},\Varid{p})\leftarrow \Varid{g}\;\Varid{a},(\Varid{y},\Varid{q})\leftarrow \Varid{f}\;\Varid{x}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+em que \ensuremath{\Varid{g}\mathbin{:}\Conid{A}\to \fun{Dist}\;\mathit B} e \ensuremath{\Varid{f}\mathbin{:}\mathit B\to \fun{Dist}\;\mathit C} são funções \textbf{monádicas} que representam
+\emph{computações probabilísticas}.
+
+Este mónade é adequado à resolução de problemas de \emph{probabilidades e estatística} usando programação funcional, de forma elegante e como caso particular da programação monádica.
+
 \section{Código fornecido}\label{sec:codigo}
 
 \subsection*{Problema 1}
@@ -598,14 +823,14 @@ Os diagramas podem ser produzidos recorrendo à \emph{package} \Xymatrix, por ex
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{12}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}t_1 \mathbin{::}{\BTree}\;\Conid{Int}{}\<[E]%
+\>[B]{}t_1 \mathbin{::}\Conid{BTree}\;\Conid{Int}{}\<[E]%
 \\
 \>[B]{}t_1 \mathrel{=}\Conid{Node}\;(\mathrm{5},(\Conid{Node}\;(\mathrm{3},(\Conid{Node}\;(\mathrm{1},(\Conid{Empty},\Conid{Empty})),\Conid{Node}\;(\mathrm{4},(\Conid{Empty},\Conid{Empty})))),{}\<[E]%
 \\
 \>[B]{}\hsindent{12}{}\<[12]%
 \>[12]{}\Conid{Node}\;(\mathrm{7},(\Conid{Node}\;(\mathrm{6},(\Conid{Empty},\Conid{Empty})),\Conid{Node}\;(\mathrm{8},(\Conid{Empty},\Conid{Empty})))))){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}t_2 \mathbin{::}{\BTree}\;\Conid{Int}{}\<[E]%
+\>[B]{}t_2 \mathbin{::}\Conid{BTree}\;\Conid{Int}{}\<[E]%
 \\
 \>[B]{}t_2 \mathrel{=}{}\<[E]%
 \\
@@ -618,7 +843,7 @@ Os diagramas podem ser produzidos recorrendo à \emph{package} \Xymatrix, por ex
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}(\Varid{node}\;\mathrm{3}\;(\Varid{node}\;\mathrm{6}\;\Conid{Empty}\;\Conid{Empty})\;(\Varid{node}\;\mathrm{7}\;\Conid{Empty}\;\Conid{Empty})){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}t_3 \mathbin{::}{\BTree}\;\Conid{Char}{}\<[E]%
+\>[B]{}t_3 \mathbin{::}\Conid{BTree}\;\Conid{Char}{}\<[E]%
 \\
 \>[B]{}t_3 \mathrel{=}{}\<[E]%
 \\
@@ -631,7 +856,7 @@ Os diagramas podem ser produzidos recorrendo à \emph{package} \Xymatrix, por ex
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}(\Varid{node}\;\text{\ttfamily 'E'}\;\Conid{Empty}\;\Conid{Empty}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}t_4 \mathbin{::}{\BTree}\;\Conid{Char}{}\<[E]%
+\>[B]{}t_4 \mathbin{::}\Conid{BTree}\;\Conid{Char}{}\<[E]%
 \\
 \>[B]{}t_4 \mathrel{=}{}\<[E]%
 \\
@@ -644,7 +869,7 @@ Os diagramas podem ser produzidos recorrendo à \emph{package} \Xymatrix, por ex
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}\Conid{Empty}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}t_5 \mathbin{::}{\BTree}\;\Conid{Int}{}\<[E]%
+\>[B]{}t_5 \mathbin{::}\Conid{BTree}\;\Conid{Int}{}\<[E]%
 \\
 \>[B]{}t_5 \mathrel{=}{}\<[E]%
 \\
@@ -675,26 +900,75 @@ que sejam necessárias.
 
 \subsection*{Problema 1}
 
+\subsubsection*{Solução 1: catamorfismo}
+
+\subsubsection*{Análise intuitiva do problema}
+
+Como primeira proposta é desejado que a travessia se baseie num catamorfismo de árvores binárias.
+
+Intuitivamente, dado que desejamos uma travessia por níveis (\emph{breadth-first}), precisamos de uma
+recursão que percorra a árvore e devolva os elementos ordenados por níveis. Ora, uma recursão implicitamente
+faz uma travessia em profundidade (\emph{depth-first}), pelo que teremos de manipular o resultado dessa recursão para obter o
+resultado desejado.
+
+Inicie-se o processo por analisar ambas as funções dadas, \ensuremath{\Varid{bfsLevels}} e \ensuremath{\Varid{bft}},
+de modo a a perceber o que cada uma delas deve fazer.
+
+A função \ensuremath{\Varid{bfsLevels}}, dado uma árvore binária de elementos de tipo \ensuremath{\Conid{A}}, deve devolver uma lista de elementos de \ensuremath{\Conid{A}},
+ordenados por níveis, ou seja, primeiro os elementos do nível 0 (a raiz), depois os do nível 1 (os filhos da raiz), depois os do nível 2 (os netos da raiz), e assim sucessivamente.
+Esta função é definida à custa de um \ensuremath{\Varid{concat}} após um catamorfismo \ensuremath{\Varid{levels}}.
+
+O catamorfismo \ensuremath{\Varid{levels}}, por sua vez, deve devolver uma lista de listas de elementos de \ensuremath{\Conid{A}},
+onde cada lista interna corresponde a um nível da árvore.
+
+Exemplifique-se o funcionamento deste algoritmo para um entendimento claro do que se pretende alcançar. Dada a árvore \ensuremath{t_1 }, o catamorfismo \ensuremath{\Varid{levels}\;t_1 } deve devolver a lista de listas \ensuremath{[\mskip1.5mu [\mskip1.5mu \mathrm{5}\mskip1.5mu],[\mskip1.5mu \mathrm{3},\mathrm{7}\mskip1.5mu],[\mskip1.5mu \mathrm{1},\mathrm{4},\mathrm{6},\mathrm{8}\mskip1.5mu]\mskip1.5mu]}. A função \ensuremath{\Varid{bfsLevels}\;t_1 }, por sua vez, deve devolver a lista resultante da concatenação das listas internas, ou seja, \ensuremath{[\mskip1.5mu \mathrm{5},\mathrm{3},\mathrm{7},\mathrm{1},\mathrm{4},\mathrm{6},\mathrm{8}\mskip1.5mu]}.
+
+\subsubsection*{Definição do catamorfismo}
+
+O objetivo é definir o gene \ensuremath{\Varid{glevels}} de \ensuremath{\Varid{levels}}, de modo a que este catamorfismo devolva a lista de listas de elementos de \ensuremath{\Conid{A}} ordenados por níveis.
+
+Represente-se esquematicamente este catamorfismo:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{BTree}\;\Conid{A}}
+           \ar[d]_-{\ensuremath{\llparenthesis\, \Varid{glevels}\,\rrparenthesis}}
+           \ar[r]^-{\ensuremath{\mathsf{out}}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\Conid{A}\times(\Conid{BTree}\;\Conid{A}\times\Conid{BTree}\;\Conid{A})}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times(\llparenthesis\, \Varid{glevels}\,\rrparenthesis\times\llparenthesis\, \Varid{glevels}\,\rrparenthesis)}}
+\\
+     \ensuremath{[\mskip1.5mu [\mskip1.5mu \Conid{A}\mskip1.5mu]\mskip1.5mu]}
+&
+     \ensuremath{\mathrm{1}\mathbin{+}\Conid{A}\times([\mskip1.5mu [\mskip1.5mu \Conid{A}\mskip1.5mu]\mskip1.5mu]\times[\mskip1.5mu [\mskip1.5mu \Conid{A}\mskip1.5mu]\mskip1.5mu])}
+           \ar[l]^-{\ensuremath{\Varid{g}}}
+}
+\end{eqnarray*}
+
+Devido à existência do coproduto, sabe-se que o gene do catamorfismo será uma função definida por:
+\begin{eqnarray}
+     \ensuremath{\Varid{g}\mathrel{=}[\mskip1.5mu \Varid{g1},\Varid{g2}\mskip1.5mu]}
+\label{eq:glevels}
+\end{eqnarray}
+
+Para definir o gene, considere-se o que deve acontecer nos dois casos possíveis
+da árvore dada como argumento:
+\begin{itemize}
+\item No caso base, em que a árvore é vazia (\ensuremath{\Conid{Empty}}), a lista de níveis deve ser a lista vazia (\ensuremath{[\mskip1.5mu \mskip1.5mu]}).
+\item No caso recursivo, em que a árvore é um nó \ensuremath{\Conid{Node}\;(\Varid{a},(\Varid{l},\Varid{r}))}, com raiz \ensuremath{\Varid{a}} e subárvores \ensuremath{\Varid{l}} e \ensuremath{\Varid{r}},
+devem ser combinadas as listas de níveis das subárvores \ensuremath{\Varid{l}} e \ensuremath{\Varid{r}}, adicionando-se o elemento \ensuremath{\Varid{a}} a 
+essa combinação de forma pertinente.
+\end{itemize}
+
+O caso base é simples de definir:
+\begin{eqnarray}
+     \ensuremath{\Varid{g1}\mathrel{=}\Varid{nil}}
+\label{eq:g1}
+\end{eqnarray}
+
+Para o caso recursivo, defina-se uma função auxiliar \ensuremath{\Varid{concatPointWise}}: 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{21}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{29}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{30}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{34}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{36}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{37}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{45}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{47}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{49}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{61}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{62}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{concatPointWise}\mathbin{::}[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
 \\
@@ -703,33 +977,78 @@ que sejam necessárias.
 \>[B]{}\Varid{concatPointWise}\;\Varid{xs}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}\Varid{xs}{}\<[E]%
 \\
 \>[B]{}\Varid{concatPointWise}\;(\Varid{x}\mathbin{:}\Varid{xs})\;(\Varid{y}\mathbin{:}\Varid{ys})\mathrel{=}(\Varid{x}\mathbin{+\!\!+}\Varid{y})\mathbin{:}\Varid{concatPointWise}\;\Varid{xs}\;\Varid{ys}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{concatPointFree}\mathbin{::}[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
-\\
-\>[B]{}\Varid{concatPointFree}\mathrel{=}\overline{\anaList{\Varid{gene}}}{}\<[E]%
-\\
-\>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathbf{where}{}\<[E]%
-\\
-\>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{gene}\mathrel{=}\alt{\alt{\Varid{g1}}{\Varid{g2}}}{\alt{\Varid{g3}}{\Varid{g4}}}\comp (\Varid{distr}+\Varid{distr})\comp \Varid{distl}\comp (\Varid{outList}\times\Varid{outList}){}\<[E]%
-\\
-\>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{g1}\mathrel{=}i_1\comp \underline{}{}\<[E]%
-\\
-\>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{g2}\mathrel{=}i_2\comp (\Varid{id}\times\conj{\Varid{nil}}{\Varid{id}})\comp \p2{}\<[E]%
-\\
-\>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{g3}\mathrel{=}i_2\comp (\Varid{id}\times\conj{\Varid{id}}{\Varid{nil}})\comp \p1{}\<[E]%
-\\
-\>[5]{}\hsindent{4}{}\<[9]%
-\>[9]{}\Varid{g4}\mathrel{=}i_2\comp \conj{\mathsf{conc}\comp (\p1\times\p1)}{\p2\times\p2}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment  Definição da Condicional (dada no enunciado)}{}\<[E]%
-\\
-\>[B]{}\mbox{\onelinecomment  cond p f g = (either f g) . (grd p)}{}\<[E]%
-\\
+\ColumnHook
+\end{hscode}\resethooks
+
+Esta função trata de concatenar duas listas de listas de elementos do tipo \ensuremath{\Conid{A}}.
+Isto trata de juntar os níveis das duas listas, ponto a ponto. A primeira claúsula
+trata do caso em que a primeira lista é vazia, retornando a segunda lista. A segunda claúsula trata do caso em que a segunda lista é vazia, retornando a
+primeira lista. A terceira claúsula trata do caso em que ambas as listas são não vazias,
+concatenando as cabeças das listas e chamando-se recursivamente para as caudas.
+Por exemplo,
+\begin{quote}
+\ensuremath{\Varid{concatPointWise}\;[\mskip1.5mu [\mskip1.5mu \mathrm{3}\mskip1.5mu],[\mskip1.5mu \mathrm{1},\mathrm{4}\mskip1.5mu]\mskip1.5mu]\;[\mskip1.5mu [\mskip1.5mu \mathrm{7}\mskip1.5mu],[\mskip1.5mu \mathrm{6},\mathrm{8}\mskip1.5mu]\mskip1.5mu]\mathrel{=}[\mskip1.5mu [\mskip1.5mu \mathrm{3},\mathrm{7}\mskip1.5mu],[\mskip1.5mu \mathrm{1},\mathrm{4},\mathrm{6},\mathrm{8}\mskip1.5mu]\mskip1.5mu]}
+\end{quote}
+
+
+Assim, o gene \ensuremath{\Varid{g2}} pode ser definido como:
+\begin{eqnarray}
+     \ensuremath{\Varid{g2}\;(\Varid{a},(\Varid{ls},\Varid{rs}))\mathrel{=}\Varid{singl}\;\Varid{a}\mathbin{+\!\!+}\Varid{concatPointWise}\;\Varid{ls}\;\Varid{rs}}
+\label{eq:g2}
+\end{eqnarray}
+
+Em que \ensuremath{\Varid{ls}} e \ensuremath{\Varid{rs}} são as listas de níveis das subárvores \ensuremath{\Varid{l}} e \ensuremath{\Varid{r}}, respetivamente.
+O resultado é a lista de níveis das subárvores, combinadas ponto a ponto, com o elemento \ensuremath{\Varid{a}} adicionado
+como novo nível no início da lista.
+
+Que, transformando em uma versão pointfree, resulta em:
+\begin{eqnarray}
+     \ensuremath{\Varid{g2}\mathrel{=}\Varid{cons}\comp (\Varid{singl}\times\uncurry{\Varid{concatPointWise}})}
+\label{eq:g2_pointfree}
+\end{eqnarray}
+
+\subsubsection*{Definição de \ensuremath{\Varid{glevels}}}
+
+Com base nas equações (\ref{eq:glevels}), (\ref{eq:g1}) e (\ref{eq:g2_pointfree}),
+A definição final de \ensuremath{\Varid{glevels}} é:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{glevels}\mathrel{=}\alt{\Varid{nil}}{\Varid{cons}\comp (\Varid{singl}\times\uncurry{\Varid{concatPointWise}})}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{Definição pointfree da função auxiliar}
+
+Com o intuito de embelezar a nossa solução, optámos por desafiar-nos a definir a função de concatenação ponto a ponto
+\ensuremath{\Varid{concatPointWise}} de forma pointfree através de um anamorfismo de listas.
+
+Recordemos que a função \ensuremath{\Varid{concatPointWise}} recebe duas listas de listas e combina-as ponto a ponto.
+Podemos pensá-la como um processo iterativo que constrói progressivamente a lista resultado,
+o que sugere o uso de um \textbf{anamorfismo}.
+
+O anamorfismo de listas tem a forma:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\anaList{\Varid{g}}\mathrel{=}\mathsf{in}_{List}\comp (\Varid{id}\mathbin{+}\Varid{id}\times\anaList{\Varid{g}})\comp \Varid{g}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+O gene \ensuremath{\Varid{g}} recebe um estado (neste caso, o par de listas \ensuremath{([\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu],[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu])}) e decide:
+\begin{itemize}
+\item Se deve parar (devolvendo \ensuremath{i_1\;()})
+\item Ou produzir o próximo elemento e o novo estado (devolvendo \ensuremath{i_2\;(\Varid{elemento},\Varid{novo\char95 estado})})
+\end{itemize}
+
+Definamos então \ensuremath{\Varid{concatCondicional}} como um anamorfismo:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{7}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{concatCondicional}\mathbin{::}[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
 \\
 \>[B]{}\Varid{concatCondicional}\mathrel{=}\overline{\anaList{\Varid{gene}}}{}\<[E]%
@@ -738,136 +1057,545 @@ que sejam necessárias.
 \>[5]{}\mathbf{where}{}\<[E]%
 \\
 \>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\mbox{\onelinecomment  O Gene: Uma cadeia de condicionais (If-Else-If...)}{}\<[E]%
+\>[7]{}\Varid{gene}\mathrel{=}\Varid{cond}\;\Varid{ambasVazias}\;\Varid{stop}{}\<[E]%
 \\
-\>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\Varid{gene}\mathrel{=}\Varid{cond}\;\Varid{ambasVazias}\;{}\<[36]%
-\>[36]{}\mbox{\onelinecomment  if both empty}{}\<[E]%
+\>[7]{}\hsindent{7}{}\<[14]%
+\>[14]{}(\Varid{cond}\;\Varid{listaEsquerdaVazia}\;\Varid{doListaDireita}{}\<[E]%
 \\
-\>[7]{}\hsindent{8}{}\<[15]%
-\>[15]{}\Varid{stop}\;{}\<[37]%
-\>[37]{}\mbox{\onelinecomment  stop}{}\<[E]%
-\\
-\>[7]{}\hsindent{8}{}\<[15]%
-\>[15]{}(\Varid{cond}\;\Varid{listaEsquerdaVazia}\;{}\<[47]%
-\>[47]{}\mbox{\onelinecomment  if left list}{}\<[E]%
-\\
-\>[15]{}\hsindent{4}{}\<[19]%
-\>[19]{}\Varid{doListaDireita}\;{}\<[49]%
-\>[49]{}\mbox{\onelinecomment  Se só L1 vazia -> Processa L2}{}\<[E]%
-\\
-\>[15]{}\hsindent{4}{}\<[19]%
-\>[19]{}(\Varid{cond}\;\Varid{listaDireitaVazia}\;{}\<[47]%
-\>[47]{}\mbox{\onelinecomment  if right list}{}\<[E]%
-\\
-\>[19]{}\hsindent{2}{}\<[21]%
-\>[21]{}\Varid{doListaEsquerda}\;{}\<[45]%
-\>[45]{}\mbox{\onelinecomment  Se só L2 vazia -> Processa L1}{}\<[E]%
-\\
-\>[19]{}\hsindent{2}{}\<[21]%
-\>[21]{}\Varid{doAmbas})){}\<[34]%
-\>[34]{}\mbox{\onelinecomment  Senão -> Processa ambas (caso x:xs, y:ys)}{}\<[E]%
+\>[7]{}\hsindent{7}{}\<[14]%
+\>[14]{}(\Varid{cond}\;\Varid{listaDireitaVazia}\;\Varid{doListaEsquerda}\;\Varid{doAmbas})){}\<[E]%
 \\[\blanklineskip]%
 \>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\mbox{\onelinecomment  1. Predicados}{}\<[E]%
+\>[7]{}\mbox{\onelinecomment  Predicados}{}\<[E]%
 \\
 \>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\Varid{ambasVazias}\mathrel{=}\uncurry{(\mathrel{\wedge})}\comp (\Varid{null}\times\Varid{null})\mbox{\onelinecomment  ([], [])?}{}\<[E]%
+\>[7]{}\Varid{ambasVazias}\mathrel{=}\uncurry{(\mathrel{\wedge})}\comp (\Varid{null}\times\Varid{null}){}\<[E]%
 \\
 \>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\Varid{listaEsquerdaVazia}{}\<[30]%
-\>[30]{}\mathrel{=}\Varid{null}\comp \p1{}\<[62]%
-\>[62]{}\mbox{\onelinecomment  ([], ...)?}{}\<[E]%
+\>[7]{}\Varid{listaEsquerdaVazia}\mathrel{=}\Varid{null}\comp \p1{}\<[E]%
 \\
 \>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\Varid{listaDireitaVazia}{}\<[29]%
-\>[29]{}\mathrel{=}\Varid{null}\comp \p2{}\<[61]%
-\>[61]{}\mbox{\onelinecomment  (..., [])?}{}\<[E]%
+\>[7]{}\Varid{listaDireitaVazia}\mathrel{=}\Varid{null}\comp \p2{}\<[E]%
 \\[\blanklineskip]%
 \>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\mbox{\onelinecomment  2. Ações (Os ramos)}{}\<[E]%
-\\[\blanklineskip]%
-\>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\mbox{\onelinecomment  Caso Paragem: Devolve Left ()}{}\<[E]%
+\>[7]{}\mbox{\onelinecomment  Ações}{}\<[E]%
 \\
 \>[5]{}\hsindent{2}{}\<[7]%
 \>[7]{}\Varid{stop}\mathrel{=}i_1\comp \underline{}{}\<[E]%
-\\[\blanklineskip]%
-\>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\mbox{\onelinecomment  Caso L1 Vazia ([], y:ys): Produz y, estado ([], ys)}{}\<[E]%
-\\
-\>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\mbox{\onelinecomment  Nota: Usamos head/tail porque o predicado garante que não é vazia}{}\<[E]%
 \\
 \>[5]{}\hsindent{2}{}\<[7]%
 \>[7]{}\Varid{doListaDireita}\mathrel{=}i_2\comp \conj{\Varid{head}\comp \p2}{\conj{\Varid{nil}}{\Varid{tail}\comp \p2}}{}\<[E]%
-\\[\blanklineskip]%
-\>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\mbox{\onelinecomment  Caso L2 Vazia (x:xs, []): Produz x, estado (xs, [])}{}\<[E]%
 \\
 \>[5]{}\hsindent{2}{}\<[7]%
 \>[7]{}\Varid{doListaEsquerda}\mathrel{=}i_2\comp \conj{\Varid{head}\comp \p1}{\conj{\Varid{tail}\comp \p1}{\Varid{nil}}}{}\<[E]%
-\\[\blanklineskip]%
-\>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\mbox{\onelinecomment  Caso Ambas Cheias (x:xs, y:ys): Produz x++y, estado (xs, ys)}{}\<[E]%
 \\
 \>[5]{}\hsindent{2}{}\<[7]%
 \>[7]{}\Varid{doAmbas}\mathrel{=}i_2\comp \conj{\mathsf{conc}\comp (\Varid{head}\times\Varid{head})}{\Varid{tail}\times\Varid{tail}}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment  Define helper e uma árvore de teste (cola isto no GHCi)}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{glevelsPointWise}\mathbin{::}()+(\Varid{a},([\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu],[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]))\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
-\\
-\>[B]{}\Varid{glevelsPointWise}\;(i_1\;())\mathrel{=}[\mskip1.5mu \mskip1.5mu]{}\<[E]%
-\\
-\>[B]{}\Varid{glevelsPointWise}\;(i_2\;(\Varid{a},(\Varid{ls},\Varid{rs})))\mathrel{=}[\mskip1.5mu \Varid{a}\mskip1.5mu]\mathbin{:}\Varid{concatPointWise}\;\Varid{ls}\;\Varid{rs}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{glevelsPointFree}\mathbin{::}()+(\Varid{a},([\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu],[\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]))\to [\mskip1.5mu [\mskip1.5mu \Varid{a}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
-\\
-\>[B]{}\Varid{glevelsPointFree}\mathrel{=}\alt{\Varid{nil}}{\Varid{cons}\comp (\Varid{singl}\times\uncurry{\Varid{concatPointFree}})}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{genePointFree}\mathbin{::}[\mskip1.5mu {\BTree}\;\Varid{a}\mskip1.5mu]\to ()+(\Varid{a},[\mskip1.5mu {\BTree}\;\Varid{a}\mskip1.5mu]){}\<[E]%
-\\
-\>[B]{}\Varid{genePointFree}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}i_1\;(){}\<[E]%
-\\
-\>[B]{}\Varid{genePointFree}\;(\Conid{Empty}\mathbin{:}\Varid{ts})\mathrel{=}\Varid{genePointFree}\;\Varid{ts}{}\<[E]%
-\\
-\>[B]{}\Varid{genePointFree}\;(\Conid{Node}\;(\Varid{a},(\Varid{l},\Varid{r}))\mathbin{:}\Varid{ts})\mathrel{=}i_2\;(\Varid{a},\Varid{ts}\mathbin{+\!\!+}[\mskip1.5mu \Varid{l},\Varid{r}\mskip1.5mu]){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{genePointWise}\mathbin{::}[\mskip1.5mu {\BTree}\;\Varid{a}\mskip1.5mu]\to ()+(\Varid{a},[\mskip1.5mu {\BTree}\;\Varid{a}\mskip1.5mu]){}\<[E]%
-\\
-\>[B]{}\Varid{genePointWise}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}i_1\;(){}\<[E]%
-\\
-\>[B]{}\Varid{genePointWise}\;(\Conid{Empty}\mathbin{:}\Varid{ts})\mathrel{=}\Varid{genePointWise}\;\Varid{ts}{}\<[E]%
-\\
-\>[B]{}\Varid{genePointWise}\;(\Conid{Node}\;(\Varid{a},(\Varid{l},\Varid{r}))\mathbin{:}\Varid{ts})\mathrel{=}\Varid{gNode}\;(\Varid{a},(\Varid{ts},(\Varid{l},\Varid{r}))){}\<[E]%
-\\
-\>[B]{}\hsindent{3}{}\<[3]%
-\>[3]{}\mathbf{where}{}\<[E]%
-\\
-\>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\Varid{gNode}\mathrel{=}i_2{}\<[E]%
-\\
-\>[5]{}\hsindent{6}{}\<[11]%
-\>[11]{}\comp (\Varid{id}\times\mathsf{conc}){}\<[E]%
-\\
-\>[5]{}\hsindent{6}{}\<[11]%
-\>[11]{}\comp (\Varid{id}\times(\Varid{id}\times\mathsf{conc})){}\<[E]%
-\\
-\>[5]{}\hsindent{6}{}\<[11]%
-\>[11]{}\comp (\Varid{id}\times(\Varid{id}\times(\Varid{singl}\times\Varid{singl}))){}\<[E]%
-\\
-\>[B]{}\mbox{\onelinecomment  g1 . cons.(Node >< id).assocr.(id >< swap) = i2. (id >< conc) . (id >< (id >< conc)) . (id >< (id >< (singl >< singl)))}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{bft}\;\Varid{t}\mathrel{=}\anaList{\Varid{genePointWise}}\;(\Varid{singl}\;\Varid{t}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
+\textbf{Explicação detalhada do gene:}
+
+O gene implementa uma máquina de estados que analisa o par de listas e decide como proceder.
+Usa uma cascata de condicionais (\ensuremath{\Varid{cond}\;\Varid{p}\;\Varid{f}\;\Varid{g}}) que funciona como \ensuremath{\mathbf{if}\;\Varid{p}\;\mathbf{then}\;\Varid{f}\;\mathbf{else}\;\Varid{g}}:
+
+\begin{enumerate}
+\item \textbf{Caso base - ambas as listas vazias} \ensuremath{([\mskip1.5mu \mskip1.5mu],[\mskip1.5mu \mskip1.5mu])}: 
+   
+   Quando não há mais elementos em nenhuma das listas, o processo termina.
+   O gene devolve \ensuremath{i_1\;()} para sinalizar paragem ao anamorfismo.
+   
+   \begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[4]{}\Varid{stop}\mathrel{=}i_1\comp \underline{}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+   
+   Este é o critério de terminação que garante que a recursão não é infinita.
+
+\item \textbf{Caso degenerado - só a lista esquerda está vazia} \ensuremath{([\mskip1.5mu \mskip1.5mu],\Varid{y}\mathbin{:}\Varid{ys})}: 
+   
+   Neste caso, não há mais elementos da lista esquerda para combinar, mas ainda
+   existem elementos em \ensuremath{\Varid{ys}} que devem ser incluídos no resultado final.
+   
+   A ação \ensuremath{\Varid{doListaDireita}} constrói o próximo elemento da lista resultado e o novo estado:
+   \begin{itemize}
+   \item \textbf{Elemento emitido}: \ensuremath{\Varid{head}\comp \p2} extrai \ensuremath{\Varid{y}} (a primeira sublista de \ensuremath{\Varid{ys}})
+   \item \textbf{Novo estado}: \ensuremath{([\mskip1.5mu \mskip1.5mu],\Varid{tail}\comp \p2)} resulta em \ensuremath{([\mskip1.5mu \mskip1.5mu],\Varid{ys'})} onde \ensuremath{\Varid{ys'}} são as sublistas restantes
+   \end{itemize}
+   
+   \begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[4]{}\Varid{doListaDireita}\mathrel{=}i_2\comp \conj{\Varid{head}\comp \p2}{\conj{\Varid{nil}}{\Varid{tail}\comp \p2}}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+   
+   Em termos práticos: como não há nada à esquerda, simplesmente copiamos \ensuremath{\Varid{y}} para o resultado
+   e continuamos com \ensuremath{([\mskip1.5mu \mskip1.5mu],\Varid{ys'})}.
+
+\item \textbf{Caso simétrico - só a lista direita está vazia} \ensuremath{(\Varid{x}\mathbin{:}\Varid{xs},[\mskip1.5mu \mskip1.5mu])}:
+   
+   Situação simétrica ao caso anterior: esgotaram-se os elementos de \ensuremath{\Varid{ys}} mas
+   ainda há elementos em \ensuremath{\Varid{xs}} para processar.
+   
+   A ação \ensuremath{\Varid{doListaEsquerda}} funciona analogamente:
+   \begin{itemize}
+   \item \textbf{Elemento emitido}: \ensuremath{\Varid{head}\comp \p1} extrai \ensuremath{\Varid{x}} (a primeira sublista de \ensuremath{\Varid{xs}})
+   \item \textbf{Novo estado}: \ensuremath{(\Varid{tail}\comp \p1,[\mskip1.5mu \mskip1.5mu])} resulta em \ensuremath{(\Varid{xs'},[\mskip1.5mu \mskip1.5mu])} onde \ensuremath{\Varid{xs'}} são as sublistas restantes
+   \end{itemize}
+   
+   \begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[4]{}\Varid{doListaEsquerda}\mathrel{=}i_2\comp \conj{\Varid{head}\comp \p1}{\conj{\Varid{tail}\comp \p1}{\Varid{nil}}}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+   
+   Interpretação: copiamos \ensuremath{\Varid{x}} para o resultado e prosseguimos com \ensuremath{(\Varid{xs'},[\mskip1.5mu \mskip1.5mu])}.
+
+\item \textbf{Caso geral - ambas as listas não-vazias} \ensuremath{(\Varid{x}\mathbin{:}\Varid{xs},\Varid{y}\mathbin{:}\Varid{ys})}:
+   
+   Este é o caso principal onde efetivamente combinamos elementos de ambas as listas.
+   Queremos concatenar \ensuremath{\Varid{x}} com \ensuremath{\Varid{y}} (ambas são sublistas) e continuar o processo com
+   os elementos restantes.
+   
+   A ação \ensuremath{\Varid{doAmbas}} realiza esta operação:
+   \begin{itemize}
+   \item \textbf{Elemento emitido}: \ensuremath{\mathsf{conc}\comp (\Varid{head}\times\Varid{head})} 
+      \begin{itemize}
+      \item \ensuremath{(\Varid{head}\times\Varid{head})} extrai \ensuremath{(\Varid{x},\Varid{y})} — as primeiras sublistas de cada lado
+      \item \ensuremath{\mathsf{conc}} concatena-as, produzindo \ensuremath{\Varid{x}\mathbin{+\!\!+}\Varid{y}}
+      \end{itemize}
+   \item \textbf{Novo estado}: \ensuremath{(\Varid{tail}\times\Varid{tail})} produz \ensuremath{(\Varid{xs},\Varid{ys})} — os restantes elementos de ambas as listas
+   \end{itemize}
+   
+   \begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[4]{}\Varid{doAmbas}\mathrel{=}i_2\comp \conj{\mathsf{conc}\comp (\Varid{head}\times\Varid{head})}{\Varid{tail}\times\Varid{tail}}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+   
+   Esta é a operação central da concatenação ponto a ponto: combinar \ensuremath{\Varid{x}} e \ensuremath{\Varid{y}} em \ensuremath{\Varid{x}\mathbin{+\!\!+}\Varid{y}}
+   e avançar para o próximo par de sublistas.
+\end{enumerate}
+
+\textbf{Fluxo de controlo:}
+
+A cascata de condicionais funciona como uma árvore de decisão:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{4}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{if}\;\Varid{ambasVazias}\;\mathbf{then}{}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}\Varid{stop}{}\<[E]%
+\\
+\>[B]{}\mathbf{else}\;\mathbf{if}\;\Varid{listaEsquerdaVazia}\;\mathbf{then}{}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}\Varid{doListaDireita}{}\<[E]%
+\\
+\>[B]{}\mathbf{else}\;\mathbf{if}\;\Varid{listaDireitaVazia}\;\mathbf{then}{}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}\Varid{doListaEsquerda}{}\<[E]%
+\\
+\>[B]{}\mathbf{else}{}\<[E]%
+\\
+\>[B]{}\hsindent{4}{}\<[4]%
+\>[4]{}\Varid{doAmbas}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Esta estrutura garante que tratamos todos os casos possíveis de forma exaustiva e mutuamente exclusiva.
+
+\textbf{Exemplo de execução:}
+
+Para \ensuremath{[\mskip1.5mu [\mskip1.5mu \mathrm{3}\mskip1.5mu],[\mskip1.5mu \mathrm{1},\mathrm{4}\mskip1.5mu]\mskip1.5mu]} e \ensuremath{[\mskip1.5mu [\mskip1.5mu \mathrm{7}\mskip1.5mu],[\mskip1.5mu \mathrm{6},\mathrm{8}\mskip1.5mu]\mskip1.5mu]}:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{concatCondicional}\;[\mskip1.5mu [\mskip1.5mu \mathrm{3}\mskip1.5mu],[\mskip1.5mu \mathrm{1},\mathrm{4}\mskip1.5mu]\mskip1.5mu]\;[\mskip1.5mu [\mskip1.5mu \mathrm{7}\mskip1.5mu],[\mskip1.5mu \mathrm{6},\mathrm{8}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\mathrel{=}\anaList{\Varid{gene}}\;([\mskip1.5mu [\mskip1.5mu \mathrm{3}\mskip1.5mu],[\mskip1.5mu \mathrm{1},\mathrm{4}\mskip1.5mu]\mskip1.5mu],[\mskip1.5mu [\mskip1.5mu \mathrm{7}\mskip1.5mu],[\mskip1.5mu \mathrm{6},\mathrm{8}\mskip1.5mu]\mskip1.5mu]){}\<[E]%
+\\
+\>[B]{}\mathrel{=}\mbox{\onelinecomment  gene devolve i2 ([3,7], ([[1,4]], [[6,8]]))}{}\<[E]%
+\\
+\>[B]{}\mathrel{=}[\mskip1.5mu \mathrm{3},\mathrm{7}\mskip1.5mu]\mathbin{:}\anaList{\Varid{gene}}\;([\mskip1.5mu [\mskip1.5mu \mathrm{1},\mathrm{4}\mskip1.5mu]\mskip1.5mu],[\mskip1.5mu [\mskip1.5mu \mathrm{6},\mathrm{8}\mskip1.5mu]\mskip1.5mu]){}\<[E]%
+\\
+\>[B]{}\mathrel{=}\mbox{\onelinecomment  gene devolve i2 ([1,4,6,8], ([], []))}{}\<[E]%
+\\
+\>[B]{}\mathrel{=}[\mskip1.5mu \mathrm{3},\mathrm{7}\mskip1.5mu]\mathbin{:}[\mskip1.5mu \mathrm{1},\mathrm{4},\mathrm{6},\mathrm{8}\mskip1.5mu]\mathbin{:}\anaList{\Varid{gene}}\;([\mskip1.5mu \mskip1.5mu],[\mskip1.5mu \mskip1.5mu]){}\<[E]%
+\\
+\>[B]{}\mathrel{=}\mbox{\onelinecomment  gene devolve i1 ()}{}\<[E]%
+\\
+\>[B]{}\mathrel{=}[\mskip1.5mu [\mskip1.5mu \mathrm{3},\mathrm{7}\mskip1.5mu],[\mskip1.5mu \mathrm{1},\mathrm{4},\mathrm{6},\mathrm{8}\mskip1.5mu]\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+E assim podemos definir a função glevels de forma mais elegante:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{glevels1}\mathrel{=}\alt{\Varid{nil}}{\Varid{cons}\comp (\Varid{singl}\times\uncurry{\Varid{concatCondicional}})}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\subsubsection*{Solução 2: anamorfismo}
+
+
+\subsubsection*{Motivação: limitações da solução por catamorfismo}
+
+A solução anterior baseada em \ensuremath{\Varid{levels}} funciona corretamente, mas tem uma ineficiência:
+constrói toda a estrutura de níveis \ensuremath{[\mskip1.5mu [\mskip1.5mu \Conid{A}\mskip1.5mu]\mskip1.5mu]} para depois a concatenar. Para árvores grandes,
+isto consome memória desnecessária.
+
+Idealmente, gostaríamos de gerar diretamente a lista final \ensuremath{[\mskip1.5mu \Conid{A}\mskip1.5mu]} sem construir a estrutura
+intermédia. Isto sugere o uso de um \textbf{anamorfismo}.
+
+\subsubsection*{Intuição: processamento por níveis com uma fila}
+
+Para fazer uma travessia \emph{breadth-first}, o algoritmo clássico usa uma fila (queue),
+tal como sugerido no artigo \cite{Ok00}. Pensámos inicialmente num algoritmo iterativo
+que funciona da seguinte forma:
+
+
+\begin{enumerate}
+\item Inicializamos a fila com a árvore argumento
+\item Repetidamente:
+   \begin{itemize}
+   \item Retiramos uma árvore da frente da fila
+   \item Se for \ensuremath{\Conid{Empty}}, ignoramos
+   \item Se for \ensuremath{\Conid{Node}\;(\Varid{a},(\Varid{l},\Varid{r}))}, emitimos \ensuremath{\Varid{a}} e adicionamos \ensuremath{\Varid{l}} e \ensuremath{\Varid{r}} ao fim da fila
+   \end{itemize}
+\item Paramos quando a fila fica vazia
+\end{enumerate}
+
+\textbf{Exemplo ilustrativo}: Para a árvore \ensuremath{t_1 } o processamento da fila procede da seguinte forma:
+
+\begin{center}
+    \includegraphics[width=0.70\textwidth]{cp2526t_media/queue-example.png}
+\end{center}
+
+\emph{Nota}: Ocultam-se os \ensuremath{\Conid{Empty}}s para simplificar a ilustração.
+
+\subsubsection*{Do algoritmo iterativo ao anamorfismo}
+
+O algoritmo acima é iterativo e gera uma lista progressivamente, 
+processando primeiro os nós de nível $n$ antes dos de nível $n+1$.
+Esta estrutura corresponde precisamente a um anamorfismo de listas,
+que constrói uma lista a partir de um estado através de um gene \ensuremath{\Varid{g}\mathbin{::}\mathit B\to \mathrm{1}\mathbin{+}\Conid{A}\times\mathit B}.
+
+O gene recebe um estado \ensuremath{\mathit B} e devolve \ensuremath{i_1\;()} quando não há mais elementos (terminação),
+ou \ensuremath{i_2\;(\Varid{a},\Varid{b'})} onde \ensuremath{\Varid{a}} é o próximo elemento a emitir e \ensuremath{\Varid{b'}} é o novo estado.
+No nosso caso, o estado será a fila \ensuremath{[\mskip1.5mu \Conid{BTree}\;\Conid{A}\mskip1.5mu]} que contém as árvores ainda por processar.
+
+Representemos o anamorfismo através do seguinte diagrama:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+     \ensuremath{[\mskip1.5mu \Conid{BTree}\;\Conid{A}\mskip1.5mu]}
+               \ar[d]_-{\ensuremath{\anaList{\Varid{g}}}}
+               \ar[r]^-{\ensuremath{\Varid{g}}}
+&    \ensuremath{\mathrm{1}\mathbin{+}\Conid{A}\times[\mskip1.5mu \Conid{BTree}\;\Conid{A}\mskip1.5mu]}
+               \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times\anaList{\Varid{g}}}}
+\\
+     \ensuremath{[\mskip1.5mu \Conid{A}\mskip1.5mu]}
+&     \ensuremath{\mathrm{1}\mathbin{+}\Conid{A}\times[\mskip1.5mu \Conid{A}\mskip1.5mu]}
+               \ar[l]^-{\ensuremath{\mathsf{in}_{List}}}
+}
+\end{eqnarray*}
+
+O gene \ensuremath{\Varid{g}\mathbin{::}[\mskip1.5mu \Conid{BTree}\;\Conid{A}\mskip1.5mu]\to \mathrm{1}\mathbin{+}\Conid{A}\times[\mskip1.5mu \Conid{BTree}\;\Conid{A}\mskip1.5mu]} deve inspecionar a fila e decidir o que fazer.
+Caso esta esteja vazia, termina devolvendo \ensuremath{i_1\;()}; caso contrário, retira a primeira árvore,
+emite a sua raiz e adiciona os filhos ao fim da fila. No entanto, se a árvore for \ensuremath{\Conid{Empty}},
+deve ser ignorada e o gene deve processar o restante da fila recursivamente.
+
+Podemos expressar isto de forma simples:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{g}\mathbin{::}[\mskip1.5mu \Conid{BTree}\;\Varid{a}\mskip1.5mu]\to ()+(\Varid{a},[\mskip1.5mu \Conid{BTree}\;\Varid{a}\mskip1.5mu]){}\<[E]%
+\\
+\>[B]{}\Varid{g}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}i_1\;(){}\<[E]%
+\\
+\>[B]{}\Varid{g}\;(\Conid{Empty}\mathbin{:}\Varid{queue})\mathrel{=}\Varid{g}\;\Varid{queue}{}\<[E]%
+\\
+\>[B]{}\Varid{g}\;(\Conid{Node}\;(\Varid{a},(\Varid{l},\Varid{r}))\mathbin{:}\Varid{queue})\mathrel{=}i_2\;(\Varid{a},\Varid{queue}\mathbin{+\!\!+}[\mskip1.5mu \Varid{l},\Varid{r}\mskip1.5mu]){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+A função \ensuremath{\Varid{bft}} inicia o processo com uma fila contendo apenas a árvore argumento,
+aplicando depois o anamorfismo com o gene \ensuremath{\Varid{g}}:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{bft}\mathrel{=}\anaList{\Varid{g}}\comp \Varid{singl}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+
 \subsection*{Problema 2}
+
+Parta-se da definição matemática da série de Taylor do seno hiperbólico:
+\[sinh \ x = \sum_{n=0}^{\infty} \frac{x^{2n+1}}{(2n+1)!} = x + \frac{x^3}{3!} + \frac{x^5}{5!} + \frac{x^7}{7!} + \ldots\]
+
+A aproximação de \ensuremath{\Varid{sinh}\;\Varid{x}} com \ensuremath{\Varid{n}} termos da série será dada por:
+\[sinh \ x \ n = \sum_{i=0}^{n-1} \frac{x^{2i+1}}{(2i+1)!}\]
+
+\subsubsection*{Definição recursiva direta}
+
+Podemos definir \ensuremath{\Varid{sinh}\;\Varid{x}\;\Varid{n}} recursivamente como:
+\begin{equation}
+sinh \ x \ n =
+     \begin{cases}
+          x & \text{se } n = 0\\
+          \frac{x^{2(n-1)+1}}{(2(n-1)+1)!} + sinh \ x \ (n-1) & \text{se } n > 0
+     \end{cases}
+\end{equation}
+
+No entanto, esta definição é ineficiente, pois cada termo envolve o cálculo de potências e fatoriais.
+
+\subsubsection*{Descoberta de uma definição eficiente por recursividade mútua}
+
+Podemos escrever a soma como uma recursão simples:
+
+\begin{equation}
+s \ x \ n =
+     \begin{cases}
+          x & \text{se } n = 0\\
+          s \ x \ (n-1) + \frac{h \ x \ (n-1)}{k \ x \ (n-1)} & \text{se } n > 0
+     \end{cases}
+\end{equation}
+
+onde \ensuremath{\Varid{s}\;\Varid{x}\;\Varid{n}} é a soma dos primeiros \ensuremath{\Varid{n}\mathbin{+}\mathrm{1}} termos, \ensuremath{\Varid{h}\;\Varid{x}\;\Varid{n}} é o numerador do termo \ensuremath{\Varid{n}} e \ensuremath{\Varid{k}\;\Varid{x}\;\Varid{n}} é o denominador do termo \ensuremath{\Varid{n}}.
+
+\subsubsection*{Descoberta de \ensuremath{\Varid{h}} por recursividade mútua}
+
+Observando que cada termo tem a forma $\frac{x^{2i+1}}{(2i+1)!}$, 
+procuramos uma relação de recorrência para o numerador \ensuremath{\Varid{h}}.
+
+Para o termo na posição \ensuremath{\Varid{n}}, o numerador é $x^{2n+1}$, e para o termo na posição \ensuremath{\Varid{n}\mathbin{+}\mathrm{1}}, 
+o numerador é $x^{2(n+1)+1} = x^{2n+3}$.
+
+A relação entre numeradores consecutivos é:
+\[
+h_{n+1} = x^{2n+3} = x^{2n+1} \cdot x^2 = h_n \cdot x^2
+\]
+
+Portanto, o numerador do próximo termo é $x^2$ vezes o numerador do termo atual.
+Assim:
+
+\begin{equation}
+h \ x \ n =
+     \begin{cases}
+          x^3 & \text{se } n = 1\\
+          x^2 \cdot h \ x \ (n-1) & \text{se } n > 1
+     \end{cases}
+\end{equation}
+
+\subsubsection*{Descoberta de \ensuremath{\Varid{k}} por recursividade mútua (2ª iteração)}
+
+Calculemos a relação de recorrência para o denominador \ensuremath{\Varid{k}}.
+O denominador do termo na posição \ensuremath{\Varid{n}} considerando que este começa em \ensuremath{\Varid{n}\mathrel{=}\mathrm{1}}
+é $(2n+3)!$. Para o termo na posição \ensuremath{\Varid{n}\mathbin{+}\mathrm{1}}, o denominador é $(2(n+1)+3)! = (2n+5)!$.
+A relação entre denominadores consecutivos é:
+
+\[\frac{k_{n+1}}{k_n} = \frac{(2n+5)!}{(2n+3)!} = (2n+5)(2n+4)\]
+
+Portanto, o denominador do próximo termo é $(2n+5)(2n+4)$ vezes o denominador do termo atual.
+
+Para o caso base \ensuremath{\Varid{n}\mathrel{=}\mathrm{1}}, temos \ensuremath{\Varid{k}\;\Varid{x}\;\mathrm{1}\mathrel{=}\mathrm{3}\mathbin{!}\mathrel{=}\mathrm{6}}.
+Assim:
+
+\begin{equation}
+k \ x \ n =
+     \begin{cases}
+          6 & \text{se } n = 1\\
+          k \ x \ n \cdot (2n+5)(2n+4) & \text{se } n > 1
+     \end{cases}
+\end{equation}
+
+Aplicar-se-á a lei de recursividade mútua novamente para obter uma definição de \ensuremath{\Varid{k}} que não dependa de \ensuremath{\Varid{n}} diretamente.
+
+\subsubsection*{Descoberta de \ensuremath{\Varid{j}} por recursividade mútua (3ª iteração)}
+
+Introduzamos uma nova função \ensuremath{\Varid{j}\;\Varid{x}\;\Varid{n}\mathrel{=}(\mathrm{2}\;\Varid{n}\mathbin{+}\mathrm{5})\;(\mathrm{2}\;\Varid{n}\mathbin{+}\mathrm{4})} para simplificar a expressão de \ensuremath{\Varid{k}}.
+
+Teremos uma relação entre termos consecutivos de \ensuremath{\Varid{j}} de:
+
+\[j_{n+1} - j_n = (2(n+1)+5)(2(n+1)+4) - (2n+5)(2n+4) = 4n^2 + 26n + 42 - 4n^2 - 18n - 20 = 8n + 22\]
+
+No caso base \ensuremath{\Varid{n}\mathrel{=}\mathrm{0}}, temos \ensuremath{\Varid{j}\;\Varid{x}\;\mathrm{0}\mathrel{=}(\mathrm{2}\mathbin{*}\mathrm{0}\mathbin{+}\mathrm{5})\;(\mathrm{2}\mathbin{*}\mathrm{0}\mathbin{+}\mathrm{4})\mathrel{=}\mathrm{20}}.
+
+Portanto, podemos definir \ensuremath{\Varid{j}} como:
+
+\begin{equation}
+j \ x \ n =
+     \begin{cases}
+          20 & \text{se } n = 0\\
+          j \ x \ n + 8n + 22 & \text{se } n > 0
+     \end{cases}
+\end{equation}
+
+\subsubsection*{Descoberta de \ensuremath{\Varid{m}} por recursividade mútua (4ª iteração)}
+
+Para simplificar ainda mais, introduzimos \ensuremath{\Varid{m}\;\Varid{x}\;\Varid{n}\mathrel{=}\mathrm{8}\;\Varid{n}\mathbin{+}\mathrm{22}}.
+
+Temos então a relação entre termos consecutivos de \ensuremath{\Varid{m}} de:
+
+\[m_{n+1} - m_n = 8(n+1) + 22 - (8n + 22) = 8\]
+
+No caso base \ensuremath{\Varid{n}\mathrel{=}\mathrm{0}}, temos \ensuremath{\Varid{m}\;\Varid{x}\;\mathrm{0}\mathrel{=}\mathrm{8}\mathbin{*}\mathrm{0}\mathbin{+}\mathrm{22}\mathrel{=}\mathrm{22}}.
+
+Portanto, podemos definir \ensuremath{\Varid{m}} como:
+
+\begin{equation}
+m \ x \ n =
+     \begin{cases}
+          22 & \text{se } n = 0\\
+          m \ x \ n + 8 & \text{se } n > 0
+     \end{cases}
+\end{equation}
+
+Tendo chegado a um ponto onde \ensuremath{\Varid{m}} é uma função linear simples, podemos agora expressar todas as funções
+em termos de recursividade mútua.
+
+\subsubsection*{Sistema final de recursividade mútua}
+
+Reunindo todas as definições recursivas obtidas:
+
+\begin{eqnarray*}
+s \ x \ n &=& \begin{cases} 
+          x & \text{se } n = 0\\
+          s \ x \ (n-1) + \frac{h \ x \ (n-1)}{k \ x \ (n-1)} & \text{se } n > 0
+     \end{cases}\\
+h \ x \ n &=& \begin{cases}
+          x^3 & \text{se } n = 1\\
+          x^2 \cdot h \ x \ (n-1) & \text{se } n > 1
+     \end{cases}\\
+k \ x \ n &=& \begin{cases}
+          6 & \text{se } n = 1\\
+          k \ x \ (n-1) \cdot j \ x \ (n-1) & \text{se } n > 1
+     \end{cases}\\
+j \ x \ n &=& \begin{cases}
+          20 & \text{se } n = 0\\
+          j \ x \ (n-1) + m \ x \ (n-1) & \text{se } n > 0
+     \end{cases}\\
+m \ x \ n &=& \begin{cases}
+          22 & \text{se } n = 0\\
+          m \ x \ (n-1) + 8 & \text{se } n > 0
+     \end{cases}
+\end{eqnarray*}
+
+Pela lei de recursividade mútua, este sistema pode ser expresso como:
+
+\[
+(s, h, k, j, m) = \text{for} \ (\text{loop} \ x) \ (\text{start} \ x)
+\]
+
+onde \ensuremath{\Varid{start}\;\Varid{x}} representa os valores iniciais e \ensuremath{\Varid{loop}\;\Varid{x}} representa a função de transição.
+
+Para determinar \ensuremath{\Varid{start}\;\Varid{x}} e \ensuremath{\Varid{loop}\;\Varid{x}}, observemos que a função \ensuremath{\for{\cdot }\ {\cdot }} itera \ensuremath{\Varid{n}} vezes,
+começando do estado inicial e aplicando repetidamente a função \ensuremath{\Varid{loop}}.
+
+Os valores iniciais correspondem a \ensuremath{\Varid{n}\mathrel{=}\mathrm{0}}:
+\begin{eqnarray*}
+\text{start} \ x = (x, x^3, 6, 20, 22)
+\end{eqnarray*}
+
+A função \ensuremath{\Varid{loop}\;\Varid{x}} transforma o estado \ensuremath{(\Varid{s},\Varid{h},\Varid{k},\Varid{j},\Varid{m})} no próximo estado,
+incrementando implicitamente \ensuremath{\Varid{n}}:
+
+\begin{eqnarray*}
+\text{loop} \ x \ (s, h, k, j, m) = (s + \frac{h}{k}, x^2 \cdot h, k \cdot j, j + m, m + 8)
+\end{eqnarray*}
+
+Finalmente, a função \ensuremath{\Varid{sinh}\;\Varid{x}\;\Varid{n}} corresponde à primeira componente do estado após \ensuremath{\Varid{n}} iterações:
+
+\begin{eqnarray*}
+\text{sinh} \ x \ n = \p1 \cdot \text{for} \ (\text{loop} \ x) \ (\text{start} \ x) \ n
+\end{eqnarray*}
+
+ou, usando \ensuremath{\Varid{head}} para extrair a primeira componente:
+
+\begin{eqnarray*}
+\text{sinh} \ x \ n = \text{head} \cdot \text{for} \ (\text{loop} \ x) \ (\text{start} \ x) \ n
+\end{eqnarray*}
+
+Esta é precisamente a estrutura da função \ensuremath{\Varid{f}\;\Varid{x}\;\Varid{n}} fornecida no enunciado, provando que
+\ensuremath{\Varid{f}\;\Varid{x}\;\Varid{n}} calcula o seno hiperbólico de \ensuremath{\Varid{x}} com \ensuremath{\Varid{n}} aproximações da série de Taylor.
+
+Transpondo para o código Haskell obtemos:
+
+\begin{quote}
+\begin{tabbing}\ttfamily
+~sinh~\char58{}\char58{}~Floating~a~\char61{}\char62{}~a~\char45{}\char62{}~Int~\char45{}\char62{}~a\\
+\ttfamily ~sinh~x~n~\char61{}~p1~\char46{}~for~\char40{}loop~x\char41{}~\char40{}start~x\char41{}~\char36{}~n\\
+\ttfamily ~~~~~~where\\
+\ttfamily ~~~~~~~~~~~start~x~\char61{}~\char40{}x\char44{}~x\char94{}3\char44{}~6\char44{}~20\char44{}~22\char41{}\\
+\ttfamily ~~~~~~~~~~~loop~x~\char40{}s\char44{}~h\char44{}~k\char44{}~j\char44{}~m\char41{}~\char61{}\\
+\ttfamily ~~~~~~~~~~~~~~~~\char40{}s~\char43{}~h~\char47{}~k\char44{}~x\char94{}2~\char42{}~h\char44{}~k~\char42{}~j\char44{}~j~\char43{}~m\char44{}~m~\char43{}~8\char41{}
+\end{tabbing}
+\end{quote}
+
+Com pequenos ajustes, modificando os tuplos para listas e usando funções auxiliares,
+obtemos a definição final de \ensuremath{\Varid{sinh}} igual à fornecida no enunciado.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{6}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{s}\mathbin{::}\Conid{Floating}\;\Varid{a}\Rightarrow \Varid{a}\to \Conid{Int}\to \Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{s}\;\Varid{x}\;\Varid{n}\mathrel{=}\Varid{head}\comp \for{\Varid{loop}\;\Varid{x}}\ {\Varid{start}\;\Varid{x}}\mathbin{\$}\Varid{n}{}\<[E]%
+\\
+\>[B]{}\hsindent{6}{}\<[6]%
+\>[6]{}\mathbf{where}{}\<[E]%
+\\
+\>[6]{}\hsindent{5}{}\<[11]%
+\>[11]{}\Varid{start}\;\Varid{x}\mathrel{=}[\mskip1.5mu \Varid{x},\Varid{x}\mathbin{\uparrow}\mathrm{3},\mathrm{6},\mathrm{20},\mathrm{22}\mskip1.5mu]{}\<[E]%
+\\
+\>[6]{}\hsindent{5}{}\<[11]%
+\>[11]{}\Varid{loop}\;\Varid{x}\;[\mskip1.5mu \Varid{s},\Varid{h},\Varid{k},\Varid{j},\Varid{m}\mskip1.5mu]\mathrel{=}[\mskip1.5mu \Varid{s}\mathbin{+}\Varid{h}\mathbin{/}\Varid{k},\Varid{x}\mathbin{\uparrow}\mathrm{2}\mathbin{*}\Varid{h},\Varid{k}\mathbin{*}\Varid{j},\Varid{j}\mathbin{+}\Varid{m},\Varid{m}\mathbin{+}\mathrm{8}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
 
 \subsection*{Problema 3}
 
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{fair\char95 merge'}\mathrel{=}\lanabracket\,\bot \,\ranabracket{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
 \subsection*{Problema 4}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pcataList}\mathrel{=}\bot {}\<[E]%
+\\
+\>[B]{}\Varid{gene}\mathrel{=}\bot {}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 
