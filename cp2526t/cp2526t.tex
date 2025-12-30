@@ -1057,13 +1057,13 @@ Definamos então \ensuremath{\Varid{concatCondicional}} como um anamorfismo:
 \>[5]{}\mathbf{where}{}\<[E]%
 \\
 \>[5]{}\hsindent{2}{}\<[7]%
-\>[7]{}\Varid{gene}\mathrel{=}\Varid{cond}\;\Varid{ambasVazias}\;\Varid{stop}{}\<[E]%
+\>[7]{}\Varid{gene}\mathrel{=}\mcond{\Varid{ambasVazias}}{\Varid{stop}}{\cdot }{}\<[E]%
 \\
 \>[7]{}\hsindent{7}{}\<[14]%
-\>[14]{}(\Varid{cond}\;\Varid{listaEsquerdaVazia}\;\Varid{doListaDireita}{}\<[E]%
+\>[14]{}(\mcond{\Varid{listaEsquerdaVazia}}{\Varid{doListaDireita}}{\cdot }{}\<[E]%
 \\
 \>[7]{}\hsindent{7}{}\<[14]%
-\>[14]{}(\Varid{cond}\;\Varid{listaDireitaVazia}\;\Varid{doListaEsquerda}\;\Varid{doAmbas})){}\<[E]%
+\>[14]{}\mcond{\Varid{listaDireitaVazia}}{\Varid{doListaEsquerda}}{\Varid{doAmbas}}){}\<[E]%
 \\[\blanklineskip]%
 \>[5]{}\hsindent{2}{}\<[7]%
 \>[7]{}\mbox{\onelinecomment  Predicados}{}\<[E]%
@@ -1326,23 +1326,23 @@ Podemos expressar isto de forma simples:
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{g}\mathbin{::}[\mskip1.5mu \Conid{BTree}\;\Varid{a}\mskip1.5mu]\to ()+(\Varid{a},[\mskip1.5mu \Conid{BTree}\;\Varid{a}\mskip1.5mu]){}\<[E]%
+\>[B]{}\Varid{g'}\mathbin{::}[\mskip1.5mu \Conid{BTree}\;\Varid{a}\mskip1.5mu]\to ()+(\Varid{a},[\mskip1.5mu \Conid{BTree}\;\Varid{a}\mskip1.5mu]){}\<[E]%
 \\
-\>[B]{}\Varid{g}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}i_1\;(){}\<[E]%
+\>[B]{}\Varid{g'}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}i_1\;(){}\<[E]%
 \\
-\>[B]{}\Varid{g}\;(\Conid{Empty}\mathbin{:}\Varid{queue})\mathrel{=}\Varid{g}\;\Varid{queue}{}\<[E]%
+\>[B]{}\Varid{g'}\;(\Conid{Empty}\mathbin{:}\Varid{queue})\mathrel{=}\Varid{g'}\;\Varid{queue}{}\<[E]%
 \\
-\>[B]{}\Varid{g}\;(\Conid{Node}\;(\Varid{a},(\Varid{l},\Varid{r}))\mathbin{:}\Varid{queue})\mathrel{=}i_2\;(\Varid{a},\Varid{queue}\mathbin{+\!\!+}[\mskip1.5mu \Varid{l},\Varid{r}\mskip1.5mu]){}\<[E]%
+\>[B]{}\Varid{g'}\;(\Conid{Node}\;(\Varid{a},(\Varid{l},\Varid{r}))\mathbin{:}\Varid{queue})\mathrel{=}i_2\;(\Varid{a},\Varid{queue}\mathbin{+\!\!+}[\mskip1.5mu \Varid{l},\Varid{r}\mskip1.5mu]){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 A função \ensuremath{\Varid{bft}} inicia o processo com uma fila contendo apenas a árvore argumento,
-aplicando depois o anamorfismo com o gene \ensuremath{\Varid{g}}:
+aplicando depois o anamorfismo com o gene \ensuremath{\Varid{g'}}:
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{bft}\mathrel{=}\anaList{\Varid{g}}\comp \Varid{singl}{}\<[E]%
+\>[B]{}\Varid{bft}\mathrel{=}\anaList{\Varid{g'}}\comp \Varid{singl}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1578,24 +1578,479 @@ obtemos a definição final de \ensuremath{\Varid{sinh}} igual à fornecida no e
 
 \subsection*{Problema 3}
 
+\subsubsection*{Análise do problema}
+
+O objetivo é fundir duas listas ordenadas em uma única lista ordenada,
+de forma justa, ou seja, intercalando os elementos das duas listas
+sempre que possível.
+
+\subsubsection*{Derivação da lei dual da recursividade mútua}
+
+
+Comece-se por provar a lei dual da recursividade mútua (de Fokkinga),
+que nos permitirá definir a função \ensuremath{\Varid{fair\char95 merge'}} como um anamorfismo de listas.
+Esta lei relaciona funções mutuamente recursivas com anamorfismos.
+
+Sejam \ensuremath{\Varid{f}\mathbin{::}\Conid{A}\to \Conid{F}\;\mathit B} e \ensuremath{\Varid{g}\mathbin{::}\Conid{A}\to \Conid{F}\;\mathit C} duas funções mutuamente recursivas,
+onde \ensuremath{\Conid{F}} é um functor, e \ensuremath{\alt{\Varid{f}}{\Varid{g}}\mathbin{::}\Conid{A}\to \Conid{F}\;(\mathit B+\mathit C)} a função que combina \ensuremath{\Varid{f}} e \ensuremath{\Varid{g}}.
+Sejam \ensuremath{\Varid{h}\mathbin{::}\Conid{D}\to \mathit B} e \ensuremath{\Varid{k}\mathbin{::}\Conid{D}\to \mathit C} duas funções tais que:
+
+\begin{equation}
+\begin{aligned}
+\ensuremath{\alt{\Varid{f}}{\Varid{g}}\mathrel{=}\ana{\alt{\Varid{h}}{\Varid{k}}}}
+\end{aligned}
+\end{equation}
+
+Então, as seguintes equações são satisfeitas:
+
+\begin{equation}
+\begin{aligned}
+\ensuremath{\alt{\Varid{f}}{\Varid{g}}\mathrel{=}\ana{\alt{\Varid{h}}{\Varid{k}}}}
+&\equiv (universal \; property \; of \; ana)\\
+\ensuremath{\Varid{out}\comp \alt{\Varid{f}}{\Varid{g}}\mathrel{=}\fun F \;\alt{\Varid{f}}{\Varid{g}}\comp \alt{\Varid{h}}{\Varid{k}}}
+&\equiv (coproduct \; fusion \; x2)\\
+\ensuremath{\alt{\Varid{out}\comp \Varid{f}}{\Varid{out}\comp \Varid{g}}\mathrel{=}\alt{\fun F \;\alt{\Varid{f}}{\Varid{g}}\comp \Varid{h}}{\fun F \;\alt{\Varid{f}}{\Varid{g}}\comp \Varid{k}}}
+&\equiv (coproduct \; equals \; law)\\
+\begin{cases}
+\ensuremath{\Varid{out}\comp \Varid{f}\mathrel{=}\fun F \;\alt{\Varid{f}}{\Varid{g}}\comp \Varid{h}}\\
+\ensuremath{\Varid{out}\comp \Varid{g}\mathrel{=}\fun F \;\alt{\Varid{f}}{\Varid{g}}\comp \Varid{k}}
+\label{eq:fokkinga_dual1}
+\end{cases}
+\end{aligned}
+\end{equation}
+
+Provou-se, assim, a lei dual da recursividade mútua.
+
+\subsubsection*{Aplicação da lei dual ao \textit{fair-merge}}
+
+Considere-se o tipo de streams definido no enunciado:
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{fair\char95 merge'}\mathrel{=}\lanabracket\,\bot \,\ranabracket{}\<[E]%
+\>[B]{}\mathbf{data}\;\Conid{Stream}\;\Varid{a}\mathrel{=}\Conid{Cons}\;(\Varid{a},\Conid{Stream}\;\Varid{a}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
+
+E o respetivo destrutor:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{out}\mathbin{::}\Conid{Stream}\;\Varid{a}\to (\Varid{a},\Conid{Stream}\;\Varid{a}){}\<[E]%
+\\
+\>[B]{}\Varid{out}\;(\Conid{Cons}\;(\Varid{x},\Varid{xs}))\mathrel{=}(\Varid{x},\Varid{xs}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+O functor associado a este tipo é, portanto:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Conid{F}\;\Conid{S}\mathrel{=}\Conid{A}\times\Conid{S}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Isto representa que cada elemento de um stream é um par composto por um valor do tipo arbitrário \ensuremath{\Conid{A}}
+(que representa o tipo dos elementos do stream) e o restante da estrutura do stream.
+
+Pretende-se definir a função
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{fair}\mathbin{\char92 \char95 }\Varid{merge}\mathbin{::}(\Conid{Stream}\lambda ,\Varid{a}\lambda \Varid{times}\;\Conid{Stream}\lambda ,\Varid{a})\mathbin{+}(\Conid{Stream}\lambda ,\Varid{a}\lambda \Varid{times}\;\Conid{Stream}\lambda ,\Varid{a}){}\<[E]%
+\\
+\>[B]{}\hsindent{13}{}\<[13]%
+\>[13]{}\lambda \Varid{to}\;\Conid{Stream}\lambda ,\Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+como um anamorfismo.
+
+Dada a definição mutuamente recursiva de \ensuremath{\Varid{fair\char95 merge}}:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{fair\char95 merge}\mathrel{=}[\mskip1.5mu \Varid{h},\Varid{k}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mathbf{where}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{h}\;(\Conid{Cons}\;(\Varid{x},\Varid{xs}),\Varid{y})\mathrel{=}\Conid{Cons}\;(\Varid{x},\Varid{k}\;(\Varid{xs},\Varid{y})){}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{k}\;(\Varid{x},\Conid{Cons}\;(\Varid{y},\Varid{ys}))\mathrel{=}\Conid{Cons}\;(\Varid{y},\Varid{h}\;(\Varid{x},\Varid{ys})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Aplicando a lei dual da recursividade mútua, provada anteriormente
+(equação~\ref{eq:fokkinga_dual1}), tem-se que:
+\begin{equation}
+\ensuremath{\alt{\Varid{h}}{\Varid{k}}\mathrel{=}\ana{\Varid{g}}}
+\end{equation}
+
+\
+se, e só se, se verificarem as equações:
+\[
+\begin{cases}
+out \cdot h = F[h,k] \cdot g_L \\
+out \cdot k = F[h,k] \cdot g_R
+\end{cases}
+\]
+onde $g = [g_L, g_R]$.
+
+Como $F \; X = A \times X$, tem-se:
+\[
+F \; [h,k] = id \times [h,k]
+\]
+
+Assim, definem-se as componentes do gene do anamorfismo, $g$, da seguinte forma:
+\[
+\begin{aligned}
+g_L(Cons(x,xs),y) &= (x,\; Right(xs,y)) \\
+g_R(x,Cons(y,ys)) &= (y,\; Left(x,ys))
+\end{aligned}
+\]
+
+Verifica-se então que:
+\[
+\begin{aligned}
+out \cdot h (Cons(x,xs),y)
+&= (x,\; k(xs,y)) \\
+&= (id \times [h,k]) (x,\; Right(xs,y)) \\
+&= F[h,k] \cdot g_L (Cons(x,xs),y)
+\end{aligned}
+\]
+
+De forma análoga:
+\[
+\begin{aligned}
+out \cdot k (x,Cons(y,ys))
+&= (y,\; h(x,ys)) \\
+&= (id \times [h,k]) (y,\; Left(x,ys)) \\
+&= F[h,k] \cdot g_R (x,Cons(y,ys))
+\end{aligned}
+\]
+
+Logo, ambas as equações da lei dual são satisfeitas.
+
+\subsubsection*{Síntese: Transformação em anamorfismo}
+
+Tendo provado que o gene satisfaz as equações da lei dual de Fokkinga 
+(equações acima), pela propriedade universal do anamorfismo, 
+podemos agora expressar \ensuremath{\Varid{fair\char95 merge}} diretamente como: 
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{fair\char95 merge'}\mathrel{=}\lanabracket\,\Varid{g}\,\ranabracket{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+onde \ensuremath{\Varid{g}\mathrel{=}\alt{\Varid{g\char95 L}}{\Varid{g\char95 R}}} com as componentes já derivadas anteriormente.
+Escrevendo \ensuremath{\Varid{g}} de forma explícita e única, obtem-se a definição final do gene
+com:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{g}\mathbin{::}(\Conid{Stream}\;\Varid{a},\Conid{Stream}\;\Varid{a})+(\Conid{Stream}\;\Varid{a},\Conid{Stream}\;\Varid{a})\to (\Varid{a},(\Conid{Stream}\;\Varid{a},\Conid{Stream}\;\Varid{a})+(\Conid{Stream}\;\Varid{a},\Conid{Stream}\;\Varid{a})){}\<[E]%
+\\
+\>[B]{}\Varid{g}\;(i_1\;{}\<[10]%
+\>[10]{}(\Conid{Cons}\;(\Varid{x},\Varid{xs}),\Varid{y}))\mathrel{=}(\Varid{x},i_2\;(\Varid{xs},\Varid{y})){}\<[E]%
+\\
+\>[B]{}\Varid{g}\;(i_2\;(\Varid{x},\Conid{Cons}\;(\Varid{y},\Varid{ys})))\mathrel{=}(\Varid{y},i_1\;(\Varid{x},\Varid{ys})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+A definição obtida caracteriza \textit{fair\_merge} como um processo
+iterativo infinito, no qual cada passo:
+(i) seleciona o próximo elemento de uma das streams,
+(ii) alterna a stream ativa,
+e (iii) continua o processo a partir do novo par de streams.
+
+Esta abordagem evita a utilização de recursão explícita,
+tornando evidente o caráter justo da fusão das duas streams.
 
 \subsection*{Problema 4}
 
+Queremos descobrir a probabilidade da frase que abaixo se apresenta ser gerada por um processo probabilístico que pode parar a qualquer momento, emitindo a palavra "stop", ou continuar a emitir palavras da frase original com alta probabilidade.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{pcataList}\mathrel{=}\bot {}\<[E]%
-\\
-\>[B]{}\Varid{gene}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{frase}\mathrel{=}[\mskip1.5mu \text{\ttfamily \char34 Vamos\char34},\text{\ttfamily \char34 atacar\char34},\text{\ttfamily \char34 hoje\char34}\mskip1.5mu]{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
+Para modelar este processo, utilizamos o mónade de distribuições de probabilidade Dist, que nos permite representar escolhas probabilísticas de forma elegante.
+
+Define-se, primeiramente, um catamorfismo probabilístco, pcataList, que processa a lista de palavras e aplica uma função gene, g, que determina as probabilidades de parar ou continuar a geração da frase.
+Este usa a notação \ensuremath{\mathbf{do}}, que facilita a manipulação de ações monádicas.
+Na sua essência, a operação executada por pcataList, descreve-se como:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pcataList}\;\Varid{g}\;[\mskip1.5mu \mskip1.5mu]{}\<[20]%
+\>[20]{}\mathrel{=}\Varid{g}\;(i_1\;()){}\<[E]%
+\\
+\>[B]{}\Varid{pcataList}\;\Varid{g}\;(\Varid{x}\mathbin{:}\Varid{xs})\mathrel{=}\mathbf{do}\;\{\mskip1.5mu \Varid{y}\leftarrow \Varid{pcataList}\;\Varid{g}\;\Varid{xs};\Varid{g}\;(i_2\;(\Varid{x},\Varid{y}))\mskip1.5mu\}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{Interpretação probabilística e origem de \texttt{pcataList}}
+
+Seja \texttt{M} um mónade, com operações \texttt{return} e
+\texttt{>>=} (bind).
+Define-se o \emph{operador monádico} (também designado por composição de
+Kleisli) por:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{f}\kcomp \Varid{g}\mathrel{=}\lambda \Varid{x}\to \Varid{g}\;\Varid{x}\bind \Varid{f}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Este operador permite compor funções que produzem efeitos monádicos,
+encadeando corretamente esses efeitos.
+
+No caso do mónade das distribuições de probabilidade \texttt{Dist},
+o operador $\bullet$ corresponde à combinação sequencial de escolhas
+aleatórias, propagando as probabilidades dos resultados.
+
+\medskip
+
+Considere-se agora a definição recursiva de \texttt{pcataList}:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pcataList}\;\Varid{g}\;(\Varid{x}\mathbin{:}\Varid{xs})\mathrel{=}\Varid{pcataList}\;\Varid{g}\;\Varid{xs}\bind (\lambda \Varid{y}\to \Varid{g}\;(i_2\;(\Varid{x},\Varid{y}))){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Usando a definição do operador monádico, esta expressão pode ser
+reescrita como:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pcataList}\;\Varid{g}\;(\Varid{x}\mathbin{:}\Varid{xs})\mathrel{=}\lambda \Varid{y}\to \Varid{g}\;(i_2\;(\Varid{x},\Varid{y}))\kcomp \Varid{pcataList}\;\Varid{g}\;\Varid{xs}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Esta forma mostra que \texttt{pcataList} é construída exclusivamente
+através de composições monádicas, sem recorrer a recursão explícita
+sobre efeitos.
+
+\subsubsection*{Origem da definição de \texttt{pcataList}}
+
+A função \texttt{pcataList} processa uma lista da direita para a
+esquerda, combinando os efeitos monádicos produzidos pelo gene $g$.
+
+O gene:
+\[
+g :: Either () (a,b) \to Dist\,b
+\]
+descreve o comportamento local do processo:
+\begin{itemize}
+  \item quando recebe \texttt{Left ()}, decide probabilisticamente se o
+        processo termina imediatamente;
+  \item quando recebe \texttt{Right (x,y)}, decide se o processo
+        continua, incorporando a palavra $x$, ou se termina nesse ponto.
+\end{itemize}
+
+Em cada passo, o resultado probabilístico da cauda da lista é combinado
+com o efeito descrito por $g$ usando o operador monádico $\bullet$.
+Este encadeamento garante que todas as probabilidades são corretamente
+propagadas.
+
+\subsubsection*{Interpretação probabilística}
+
+A expressão:
+\[
+(\lambda y \to g(\mathrm{Right}(x,y))) \bullet pcataList\ g\ xs
+\]
+significa que:
+\begin{enumerate}
+  \item primeiro se gera, de forma probabilística, o resultado associado
+        à cauda da lista;
+  \item para cada resultado possível, se aplica o gene $g$;
+  \item as distribuições resultantes são combinadas segundo as leis da
+        Mónade \texttt{Dist}.
+\end{enumerate}
+
+Assim, \texttt{pcataList} modela um processo probabilístico que pode
+interromper a geração da frase a qualquer momento, mas que respeita a
+estrutura da lista e a semântica dos mónades.
+
+\subsubsection*{Construção do gene a partir de distribuições explícitas}
+
+A função gene descreve o comportamento local do processo
+probabilístico responsável pela geração da frase.
+Em cada passo, o processo pode parar ou continuar, de acordo com
+probabilidades previamente definidas.
+
+O tipo de gene é:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{gene}\mathbin{::}()+(\Conid{String},[\mskip1.5mu \Conid{String}\mskip1.5mu])\to \fun{Dist}\;[\mskip1.5mu \Conid{String}\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Para justificar a sua definição, começa-se por descrever explicitamente
+as distribuições de probabilidade pretendidas em cada caso.
+
+\subsubsection*{Caso base: distribuição explícita}
+
+No caso base, correspondente ao valor \texttt{Left ()}, pretende-se
+modelar a possibilidade de o processo terminar imediatamente.
+
+Define-se a distribuição de probabilidade pretendida como:
+\[
+\begin{array}{c\textbar c}
+\text{Resultado} & \text{Probabilidade} \\ \hline
+["stop"] & 0.9 \\
+[] & 0.1
+\end{array}
+\]
+
+
+
+Esta distribuição indica que, com elevada probabilidade, o processo
+termina e emite a palavra \texttt{"stop"}, mas que existe ainda uma
+pequena probabilidade de não emitir nenhuma palavra.
+
+Em termos da Mónade \texttt{Dist}, esta distribuição poderia ser
+representada explicitamente como:
+\[
+[(0.9, ["stop"]), (0.1, [])]
+\]
+
+No entanto, para maior clareza e concisão, esta distribuição é
+encapsulada através do combinador:
+\[
+choose\ p\ x\ y
+\]
+que representa uma escolha probabilística entre os valores $x$ e $y$,
+com probabilidade $p$ e $1-p$, respetivamente.
+
+Assim, a distribuição anterior pode ser escrita como:
+\[
+g_1() = choose\ 0.9\ ["stop"]\ []
+\]
+
+\subsubsection*{Caso recursivo: distribuição explícita}
+
+No caso recursivo, correspondente ao valor \texttt{Right (w,rest)},
+pretende-se decidir se a palavra atual \texttt{w} é incluída na frase
+gerada ou se o processo termina nesse ponto.
+
+A distribuição desejada é:
+\[
+\begin{array}{c\textbar c}
+\text{Resultado} & \text{Probabilidade} \\ \hline
+w:rest & 0.95 \\
+rest & 0.05
+\end{array}
+\]
+
+Esta distribuição traduz a ideia de que o processo tende a continuar,
+mas pode parar com pequena probabilidade.
+
+De forma explícita, esta distribuição seria:
+\[
+[(0.95, w:rest), (0.05, rest)]
+\]
+
+Tal como no caso base, esta distribuição é posteriormente expressa de
+forma mais compacta usando o combinador \texttt{choose}:
+\[
+g_2(w,rest) = choose\ 0.95\ (w:rest)\ rest
+\]
+
+\subsubsection*{Definição final do gene}
+
+Tendo definido separadamente os comportamentos probabilísticos dos dois
+casos, estes são combinados utilizando a função \texttt{either},
+obtendo-se a definição final de gene:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{gene}\mathbin{::}()+(\Conid{String},[\mskip1.5mu \Conid{String}\mskip1.5mu])\to \fun{Dist}\;[\mskip1.5mu \Conid{String}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{gene}\mathrel{=}\alt{\Varid{g1}}{\Varid{g2}}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\mathbf{where}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\mbox{\onelinecomment  Caso Base: Parar a geração com a palavra 'stop'}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{g1}\;()\mathrel{=}\Varid{choose}\;\mathrm{0.9}\;[\mskip1.5mu \text{\ttfamily \char34 stop\char34}\mskip1.5mu]\;[\mskip1.5mu \mskip1.5mu]{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\Varid{g2}\;(\Varid{w},\Varid{rest})\mathrel{=}\Varid{choose}\;\mathrm{0.95}\;(\Varid{w}\mathbin{:}\Varid{rest})\;\Varid{rest}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{Cálculo da probabilidade da frase}
+
+Aplicando o gene definido anteriormente à frase
+e usando a definição de \texttt{transmitir} do enunciado, obtém-se:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{resultado}\mathrel{=}\Varid{transmitir}\;\Varid{frase}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+A variável \texttt{resultado} conterá a distribuição de probabilidade
+associada a todas as frases possíveis geradas pelo processo.
+
+Correndo o código, obtém-se as probabilidades associadas a cada frase:
+
+\begin{center}
+\begin{tabular}{r|r}
+\texttt{["Vamos","atacar","hoje","stop"]} & $77.2\%$ \\
+\texttt{["Vamos","atacar","hoje"]} & $8.6\%$ \\
+\texttt{["Vamos","atacar","stop"]} & $4.1\%$ \\
+\texttt{["Vamos","hoje","stop"]} & $4.1\%$ \\
+\texttt{["atacar","hoje","stop"]} & $4.1\%$ \\
+\texttt{["Vamos","atacar"]} & $0.5\%$ \\
+\texttt{["Vamos","hoje"]} & $0.5\%$ \\
+\texttt{["atacar","hoje"]} & $0.5\%$ \\
+\texttt{["Vamos","stop"]} & $0.2\%$ \\
+\texttt{["atacar","stop"]} & $0.2\%$ \\
+\texttt{["hoje","stop"]} & $0.2\%$ \\
+\texttt{["atacar"]} & $0.0\%$ \\
+\texttt{["hoje"]} & $0.0\%$ \\
+\texttt{["Vamos"]} & $0.0\%$ \\
+\texttt{["stop"]} & $0.0\%$ \\
+\texttt{[]} & $0.0\%$ \\
+\end{tabular}
+\end{center}
+
+Portanto, respondendo às questões iniciais:
+\begin{itemize}
+\item A probabilidade de a palavra \texttt{"atacar"} se perder é de $\mathbf{4.1\%}$
+\item A probabilidade de seguirem todas as palavras, mas faltar o \texttt{"stop"} é de $\mathbf{8.6\%}$
+\item A probabilidade de transmissão perfeita é de $\mathbf{77.2\%}$
+\end{itemize}
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 

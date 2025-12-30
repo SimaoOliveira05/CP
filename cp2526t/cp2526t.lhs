@@ -809,9 +809,9 @@ Definamos então |concatCondicional| como um anamorfismo:
 concatCondicional :: [[a]] -> [[a]] -> [[a]]
 concatCondicional = curry (anaList gene)
     where
-      gene = cond ambasVazias stop
-             (cond listaEsquerdaVazia doListaDireita
-             (cond listaDireitaVazia doListaEsquerda doAmbas))
+      gene = Cp.cond ambasVazias stop
+             (Cp.cond listaEsquerdaVazia doListaDireita
+             (Cp.cond listaDireitaVazia doListaEsquerda doAmbas))
 
       -- Predicados
       ambasVazias = uncurry (&&) . (null >< null)
@@ -1011,17 +1011,17 @@ deve ser ignorada e o gene deve processar o restante da fila recursivamente.
 Podemos expressar isto de forma simples:
 
 \begin{code}
-g :: [BTree a] -> Either () (a, [BTree a])
-g [] = i1 ()
-g (Empty : queue) = g queue
-g (Node(a,(l,r)) : queue) = i2 (a, queue ++ [l,r])
+g' :: [BTree a] -> Either () (a, [BTree a])
+g' [] = i1 ()
+g' (Empty : queue) = g' queue
+g' (Node(a,(l,r)) : queue) = i2 (a, queue ++ [l,r])
 \end{code}
 
 A função |bft| inicia o processo com uma fila contendo apenas a árvore argumento,
-aplicando depois o anamorfismo com o gene |g|:
+aplicando depois o anamorfismo com o gene |g'|:
 
 \begin{code}   
-bft = anaList g . singl
+bft = anaList g' . singl
 \end{code}
 
 
@@ -1244,17 +1244,404 @@ s x n = head . for (loop x) (start x) $ n
 
 \subsection*{Problema 3}
 
+\subsubsection*{Análise do problema}
+
+O objetivo é fundir duas listas ordenadas em uma única lista ordenada,
+de forma justa, ou seja, intercalando os elementos das duas listas
+sempre que possível.
+
+\subsubsection*{Derivação da lei dual da recursividade mútua}
+
+
+Comece-se por provar a lei dual da recursividade mútua (de Fokkinga),
+que nos permitirá definir a função |fair_merge'| como um anamorfismo de listas.
+Esta lei relaciona funções mutuamente recursivas com anamorfismos.
+
+Sejam |f :: A -> F B| e |g :: A -> F C| duas funções mutuamente recursivas,
+onde |F| é um functor, e |either f g :: A -> F (Either B C)| a função que combina |f| e |g|.
+Sejam |h :: D -> B| e |k :: D -> C| duas funções tais que:
+
+\begin{equation}
+\begin{aligned}
+|either f g = ana(either h k)|
+\end{aligned}
+\end{equation}
+
+Então, as seguintes equações são satisfeitas:
+
+\begin{equation}
+\begin{aligned}
+|either f g = ana(either h k)|
+&\equiv (universal \; property \; of \; ana)\\
+|out . (either f g) = fF (either f g) . (either h k)|
+&\equiv (coproduct \; fusion \; x2)\\
+|(either (out . f) (out . g)) = (either (fF (either f g) . h) (fF (either f g) . k))|
+&\equiv (coproduct \; equals \; law)\\
+\begin{cases}
+|out . f = fF (either f g) . h|\\
+|out . g = fF (either f g) . k|
+\label{eq:fokkinga_dual1}
+\end{cases}
+\end{aligned}
+\end{equation}
+
+Provou-se, assim, a lei dual da recursividade mútua.
+
+\subsubsection*{Aplicação da lei dual ao \textit{fair-merge}}
+
+Considere-se o tipo de streams definido no enunciado:
+
+\begin{spec}
+data Stream a = Cons (a, Stream a)
+\end{spec}
+
+E o respetivo destrutor:
+
+\begin{spec}
+out :: Stream a -> (a, Stream a)
+out (Cons (x,xs)) = (x,xs)
+\end{spec}
+
+O functor associado a este tipo é, portanto:
+\begin{spec}
+F S = A >< S
+\end{spec}
+
+Isto representa que cada elemento de um stream é um par composto por um valor do tipo arbitrário |A|
+(que representa o tipo dos elementos do stream) e o restante da estrutura do stream.
+
+Pretende-se definir a função
+\begin{spec}
+fair\_merge :: (Stream\,a \times Stream\,a) + (Stream\,a \times Stream\,a)
+            \to Stream\,a
+\end{spec}
+
+como um anamorfismo.
+
+Dada a definição mutuamente recursiva de |fair_merge|:
+\begin{spec}
+fair_merge = [h,k]
+  where
+    h (Cons (x,xs), y) = Cons (x, k (xs,y))
+    k (x, Cons (y,ys)) = Cons (y, h (x,ys))
+\end{spec}
+
+Aplicando a lei dual da recursividade mútua, provada anteriormente
+(equação~\ref{eq:fokkinga_dual1}), tem-se que:
+\begin{equation}
+|either h k = ana g|
+\end{equation}
+
+\
+se, e só se, se verificarem as equações:
+\[
+\begin{cases}
+out \cdot h = F[h,k] \cdot g_L \\
+out \cdot k = F[h,k] \cdot g_R
+\end{cases}
+\]
+onde $g = [g_L, g_R]$.
+
+Como $F \; X = A \times X$, tem-se:
+\[
+F \; [h,k] = id \times [h,k]
+\]
+
+Assim, definem-se as componentes do gene do anamorfismo, $g$, da seguinte forma:
+\[
+\begin{aligned}
+g_L(Cons(x,xs),y) &= (x,\; Right(xs,y)) \\
+g_R(x,Cons(y,ys)) &= (y,\; Left(x,ys))
+\end{aligned}
+\]
+
+Verifica-se então que:
+\[
+\begin{aligned}
+out \cdot h (Cons(x,xs),y)
+&= (x,\; k(xs,y)) \\
+&= (id \times [h,k]) (x,\; Right(xs,y)) \\
+&= F[h,k] \cdot g_L (Cons(x,xs),y)
+\end{aligned}
+\]
+
+De forma análoga:
+\[
+\begin{aligned}
+out \cdot k (x,Cons(y,ys))
+&= (y,\; h(x,ys)) \\
+&= (id \times [h,k]) (y,\; Left(x,ys)) \\
+&= F[h,k] \cdot g_R (x,Cons(y,ys))
+\end{aligned}
+\]
+
+Logo, ambas as equações da lei dual são satisfeitas.
+
+\subsubsection*{Síntese: Transformação em anamorfismo}
+
+Tendo provado que o gene satisfaz as equações da lei dual de Fokkinga 
+(equações acima), pela propriedade universal do anamorfismo, 
+podemos agora expressar |fair_merge| diretamente como: 
+
 \begin{code}
-fair_merge' = anaStream undefined
+fair_merge' = anaStream g
 \end{code}
+
+onde |g = either g_L g_R| com as componentes já derivadas anteriormente.
+Escrevendo |g| de forma explícita e única, obtem-se a definição final do gene
+com:
+
+\begin{code}
+g :: Either (Stream a, Stream a) (Stream a, Stream a) -> (a, Either (Stream a, Stream a) (Stream a, Stream a))
+g (Left  (Cons (x,xs), y)) = (x, Right (xs,y))
+g (Right (x, Cons (y,ys))) = (y, Left (x,ys))
+\end{code}
+
+A definição obtida caracteriza \textit{fair\_merge} como um processo
+iterativo infinito, no qual cada passo:
+(i) seleciona o próximo elemento de uma das streams,
+(ii) alterna a stream ativa,
+e (iii) continua o processo a partir do novo par de streams.
+
+Esta abordagem evita a utilização de recursão explícita,
+tornando evidente o caráter justo da fusão das duas streams.
 
 \subsection*{Problema 4}
 
+Queremos descobrir a probabilidade da frase que abaixo se apresenta ser gerada por um processo probabilístico que pode parar a qualquer momento, emitindo a palavra "stop", ou continuar a emitir palavras da frase original com alta probabilidade.
+
 \begin{code}
-pcataList = undefined
-gene = undefined
+frase = ["Vamos", "atacar", "hoje"]
 \end{code}
 
+Para modelar este processo, utilizamos o mónade de distribuições de probabilidade Dist, que nos permite representar escolhas probabilísticas de forma elegante.
+
+Define-se, primeiramente, um catamorfismo probabilístco, pcataList, que processa a lista de palavras e aplica uma função gene, g, que determina as probabilidades de parar ou continuar a geração da frase.
+Este usa a notação |do|, que facilita a manipulação de ações monádicas.
+Na sua essência, a operação executada por pcataList, descreve-se como:
+
+\begin{code}
+pcataList g []     = g (Left ())
+pcataList g (x:xs) = do {y <- pcataList g xs; g (Right (x, y))}
+\end{code}
+
+\subsubsection*{Interpretação probabilística e origem de \texttt{pcataList}}
+
+Seja \texttt{M} um mónade, com operações \texttt{return} e
+\texttt{>>=} (bind).
+Define-se o \emph{operador monádico} (também designado por composição de
+Kleisli) por:
+
+\begin{spec}
+(kcomp f g) = \ x -> g x >>= f
+\end{spec}
+
+Este operador permite compor funções que produzem efeitos monádicos,
+encadeando corretamente esses efeitos.
+
+No caso do mónade das distribuições de probabilidade \texttt{Dist},
+o operador $\bullet$ corresponde à combinação sequencial de escolhas
+aleatórias, propagando as probabilidades dos resultados.
+
+\medskip
+
+Considere-se agora a definição recursiva de \texttt{pcataList}:
+\begin{spec}
+pcataList g (x:xs)= pcataList g xs >>= (\ y -> g(Right (x,y)))
+\end{spec}
+
+Usando a definição do operador monádico, esta expressão pode ser
+reescrita como:
+
+\begin{spec}
+pcataList g (x:xs) = kcomp (\ y -> g (Right (x,y))) (pcataList g xs)
+\end{spec}
+
+Esta forma mostra que \texttt{pcataList} é construída exclusivamente
+através de composições monádicas, sem recorrer a recursão explícita
+sobre efeitos.
+
+\subsubsection*{Origem da definição de \texttt{pcataList}}
+
+A função \texttt{pcataList} processa uma lista da direita para a
+esquerda, combinando os efeitos monádicos produzidos pelo gene $g$.
+
+O gene:
+\[
+g :: Either () (a,b) \to Dist\,b
+\]
+descreve o comportamento local do processo:
+\begin{itemize}
+  \item quando recebe \texttt{Left ()}, decide probabilisticamente se o
+        processo termina imediatamente;
+  \item quando recebe \texttt{Right (x,y)}, decide se o processo
+        continua, incorporando a palavra $x$, ou se termina nesse ponto.
+\end{itemize}
+
+Em cada passo, o resultado probabilístico da cauda da lista é combinado
+com o efeito descrito por $g$ usando o operador monádico $\bullet$.
+Este encadeamento garante que todas as probabilidades são corretamente
+propagadas.
+
+\subsubsection*{Interpretação probabilística}
+
+A expressão:
+\[
+(\lambda y \to g(\mathrm{Right}(x,y))) \bullet pcataList\ g\ xs
+\]
+significa que:
+\begin{enumerate}
+  \item primeiro se gera, de forma probabilística, o resultado associado
+        à cauda da lista;
+  \item para cada resultado possível, se aplica o gene $g$;
+  \item as distribuições resultantes são combinadas segundo as leis da
+        Mónade \texttt{Dist}.
+\end{enumerate}
+
+Assim, \texttt{pcataList} modela um processo probabilístico que pode
+interromper a geração da frase a qualquer momento, mas que respeita a
+estrutura da lista e a semântica dos mónades.
+
+\subsubsection*{Construção do gene a partir de distribuições explícitas}
+
+A função gene descreve o comportamento local do processo
+probabilístico responsável pela geração da frase.
+Em cada passo, o processo pode parar ou continuar, de acordo com
+probabilidades previamente definidas.
+
+O tipo de gene é:
+
+\begin{spec}
+gene :: Either () (String,[String]) -> Dist [String]
+\end{spec}
+
+Para justificar a sua definição, começa-se por descrever explicitamente
+as distribuições de probabilidade pretendidas em cada caso.
+
+\subsubsection*{Caso base: distribuição explícita}
+
+No caso base, correspondente ao valor \texttt{Left ()}, pretende-se
+modelar a possibilidade de o processo terminar imediatamente.
+
+Define-se a distribuição de probabilidade pretendida como:
+\[
+\begin{array}{c\textbar c}
+\text{Resultado} & \text{Probabilidade} \\ \hline
+["stop"] & 0.9 \\
+[] & 0.1
+\end{array}
+\]
+
+
+
+Esta distribuição indica que, com elevada probabilidade, o processo
+termina e emite a palavra \texttt{"stop"}, mas que existe ainda uma
+pequena probabilidade de não emitir nenhuma palavra.
+
+Em termos da Mónade \texttt{Dist}, esta distribuição poderia ser
+representada explicitamente como:
+\[
+[(0.9, ["stop"]), (0.1, [])]
+\]
+
+No entanto, para maior clareza e concisão, esta distribuição é
+encapsulada através do combinador:
+\[
+choose\ p\ x\ y
+\]
+que representa uma escolha probabilística entre os valores $x$ e $y$,
+com probabilidade $p$ e $1-p$, respetivamente.
+
+Assim, a distribuição anterior pode ser escrita como:
+\[
+g_1() = choose\ 0.9\ ["stop"]\ []
+\]
+
+\subsubsection*{Caso recursivo: distribuição explícita}
+
+No caso recursivo, correspondente ao valor \texttt{Right (w,rest)},
+pretende-se decidir se a palavra atual \texttt{w} é incluída na frase
+gerada ou se o processo termina nesse ponto.
+
+A distribuição desejada é:
+\[
+\begin{array}{c\textbar c}
+\text{Resultado} & \text{Probabilidade} \\ \hline
+w:rest & 0.95 \\
+rest & 0.05
+\end{array}
+\]
+
+Esta distribuição traduz a ideia de que o processo tende a continuar,
+mas pode parar com pequena probabilidade.
+
+De forma explícita, esta distribuição seria:
+\[
+[(0.95, w:rest), (0.05, rest)]
+\]
+
+Tal como no caso base, esta distribuição é posteriormente expressa de
+forma mais compacta usando o combinador \texttt{choose}:
+\[
+g_2(w,rest) = choose\ 0.95\ (w:rest)\ rest
+\]
+
+\subsubsection*{Definição final do gene}
+
+Tendo definido separadamente os comportamentos probabilísticos dos dois
+casos, estes são combinados utilizando a função \texttt{either},
+obtendo-se a definição final de gene:
+
+\begin{code}
+gene :: Either () (String, [String]) -> Dist [String]
+gene = either g1 g2
+  where
+    -- Caso Base: Parar a geração com a palavra 'stop'
+    g1 () = choose 0.9 ["stop"] []
+    g2 (w, rest) = choose 0.95 (w : rest) rest
+\end{code}
+
+\subsubsection*{Cálculo da probabilidade da frase}
+
+Aplicando o gene definido anteriormente à frase
+e usando a definição de \texttt{transmitir} do enunciado, obtém-se:
+
+\begin{code}
+resultado = transmitir frase
+\end{code}
+
+A variável \texttt{resultado} conterá a distribuição de probabilidade
+associada a todas as frases possíveis geradas pelo processo.
+
+Correndo o código, obtém-se as probabilidades associadas a cada frase:
+
+\begin{center}
+\begin{tabular}{r||r}
+\texttt{["Vamos","atacar","hoje","stop"]} & $77.2\%$ \\
+\texttt{["Vamos","atacar","hoje"]} & $8.6\%$ \\
+\texttt{["Vamos","atacar","stop"]} & $4.1\%$ \\
+\texttt{["Vamos","hoje","stop"]} & $4.1\%$ \\
+\texttt{["atacar","hoje","stop"]} & $4.1\%$ \\
+\texttt{["Vamos","atacar"]} & $0.5\%$ \\
+\texttt{["Vamos","hoje"]} & $0.5\%$ \\
+\texttt{["atacar","hoje"]} & $0.5\%$ \\
+\texttt{["Vamos","stop"]} & $0.2\%$ \\
+\texttt{["atacar","stop"]} & $0.2\%$ \\
+\texttt{["hoje","stop"]} & $0.2\%$ \\
+\texttt{["atacar"]} & $0.0\%$ \\
+\texttt{["hoje"]} & $0.0\%$ \\
+\texttt{["Vamos"]} & $0.0\%$ \\
+\texttt{["stop"]} & $0.0\%$ \\
+\texttt{[]} & $0.0\%$ \\
+\end{tabular}
+\end{center}
+
+Portanto, respondendo às questões iniciais:
+\begin{itemize}
+\item A probabilidade de a palavra \texttt{"atacar"} se perder é de $\mathbf{4.1\%}$
+\item A probabilidade de seguirem todas as palavras, mas faltar o \texttt{"stop"} é de $\mathbf{8.6\%}$
+\item A probabilidade de transmissão perfeita é de $\mathbf{77.2\%}$
+\end{itemize}
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 
