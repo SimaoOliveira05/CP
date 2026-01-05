@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.12.6)  30 DEC 2025 21:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.12.6)  5 JAN 2026 23:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1543,18 +1543,16 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
 [17]
 \openout7 = `cp2526t.ptb'.
 
+\openout7 = `cp2526t.ptb'.
+
+\openout7 = `cp2526t.ptb'.
+
 
 Overfull \hbox (128.0374pt too wide) has occurred while \output is active
  [][]| 
  []
 
 [18]
-\openout7 = `cp2526t.ptb'.
-
-\openout7 = `cp2526t.ptb'.
-
-\openout7 = `cp2526t.ptb'.
-
 \openout7 = `cp2526t.ptb'.
 
 \openout7 = `cp2526t.ptb'.
@@ -1569,20 +1567,9 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
 
 \openout7 = `cp2526t.ptb'.
 
+\openout7 = `cp2526t.ptb'.
 
-Overfull \hbox (1.27261pt too wide) in paragraph at lines 1758--1769
- [][] 
- []
-
-
-Overfull \hbox (1.27261pt too wide) in paragraph at lines 1758--1769
- [][][][] 
- []
-
-
-Overfull \hbox (1.27261pt too wide) in paragraph at lines 1758--1769
- [][] 
- []
+\openout7 = `cp2526t.ptb'.
 
 \openout7 = `cp2526t.ptb'.
 
@@ -1596,7 +1583,20 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
 
 \openout7 = `cp2526t.ptb'.
 
-\openout7 = `cp2526t.ptb'.
+
+Overfull \hbox (1.27261pt too wide) in paragraph at lines 1867--1878
+ [][] 
+ []
+
+
+Overfull \hbox (1.27261pt too wide) in paragraph at lines 1867--1878
+ [][][][] 
+ []
+
+
+Overfull \hbox (1.27261pt too wide) in paragraph at lines 1867--1878
+ [][] 
+ []
 
 \openout7 = `cp2526t.ptb'.
 
@@ -1608,47 +1608,21 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
 [21]
 \openout7 = `cp2526t.ptb'.
 
+\openout7 = `cp2526t.ptb'.
 
+\openout7 = `cp2526t.ptb'.
 
-! Package array Error:  Illegal pream-token (\textbar): `c' used.
+\openout7 = `cp2526t.ptb'.
 
-See the array package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.1920 \begin{array}{c\textbar c}
-                                 
-? 
-! Missing number, treated as zero.
-<to be read again> 
-                   >
-l.1923 []
-          & 0.1
-? 
-! Illegal unit of measure (pt inserted).
-<to be read again> 
-                   >
-l.1923 []
-          & 0.1
-? 
-! Missing number, treated as zero.
-<to be read again> 
-                   !
-l.1923 []
-          & 0.1
-? 
-! Illegal unit of measure (pt inserted).
-<to be read again> 
-                   !
-l.1923 []
-          & 0.1
-? 
 
 Overfull \hbox (128.0374pt too wide) has occurred while \output is active
  [][]| 
  []
 
 [22]
+\openout7 = `cp2526t.ptb'.
+
+
 
 ! Package array Error:  Illegal pream-token (\textbar): `c' used.
 
@@ -1656,7 +1630,47 @@ See the array package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1960 \begin{array}{c\textbar c}
+l.2029 \begin{array}{c\textbar c}
+                                 
+? 
+! Missing number, treated as zero.
+<to be read again> 
+                   >
+l.2032 []
+          & 0.1
+? 
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   >
+l.2032 []
+          & 0.1
+? 
+! Missing number, treated as zero.
+<to be read again> 
+                   !
+l.2032 []
+          & 0.1
+? 
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   !
+l.2032 []
+          & 0.1
+? 
+
+Overfull \hbox (128.0374pt too wide) has occurred while \output is active
+ [][]| 
+ []
+
+[23]
+
+! Package array Error:  Illegal pream-token (\textbar): `c' used.
+
+See the array package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.2069 \begin{array}{c\textbar c}
                                  
 ? 
 \openout7 = `cp2526t.ptb'.
@@ -1668,12 +1682,12 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
  [][]| 
  []
 
-[23] (./cp2526t.ind
+[24] (./cp2526t.ind
 Overfull \hbox (128.0374pt too wide) has occurred while \output is active
  [][]| 
  []
 
-[24] [25
+[25] [26
 
 
 ]) (./cp2526t.bbl
@@ -1686,7 +1700,7 @@ Overfull \hbox (128.0374pt too wide) has occurred while \output is active
  [][]| 
  []
 
-[26
+[27
 
 ] (./cp2526t.aux)
  ***********
@@ -1704,10 +1718,10 @@ Package rerunfilecheck Info: File `cp2526t.out' has not changed.
 (rerunfilecheck)             Checksum: 1D188B8CDF969C53DBC74774FEC30481;1480.
  ) 
 Here is how much of TeX's memory you used:
- 47960 strings out of 476106
- 1049672 string characters out of 5793933
+ 47958 strings out of 476106
+ 1049669 string characters out of 5793933
  1942975 words of memory out of 5000000
- 69204 multiletter control sequences out of 15000+600000
+ 69201 multiletter control sequences out of 15000+600000
  823758 words of font info for 163 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  99i,19n,101p,3292b,664s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1735,10 +1749,10 @@ e1/public/amsfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type
 /stmaryrd/stmary9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/xypic/x
 yatip10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/xypic/xybtip10.pf
 b>
-Output written on cp2526t.pdf (27 pages, 1267105 bytes).
+Output written on cp2526t.pdf (28 pages, 1271480 bytes).
 PDF statistics:
- 464 PDF objects out of 1000 (max. 8388607)
- 368 compressed objects within 4 object streams
- 69 named destinations out of 1000 (max. 500000)
+ 468 PDF objects out of 1000 (max. 8388607)
+ 371 compressed objects within 4 object streams
+ 70 named destinations out of 1000 (max. 500000)
  107 words of extra memory for PDF output out of 10000 (max. 10000000)
 

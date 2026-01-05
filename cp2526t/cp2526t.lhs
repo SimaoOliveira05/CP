@@ -203,6 +203,10 @@ import Control.Applicative hiding ((<|>),empty)
 import System.Process
 import Control.Concurrent
 
+import System.CPUTime
+import Control.DeepSeq (deepseq)
+
+
 main = undefined
 \end{code}
 %endif
@@ -1241,6 +1245,71 @@ s x n = head . for (loop x) (start x) $ n
           loop x [s, h, k, j, m] = [s + h / k, x^2 * h, k * j, j + m, m + 8]
 \end{code}
 
+\subsubsection*{Comparação de eficiências}
+
+A definição recursiva direta de |sinh x n| é ineficiente devido ao cálculo repetido
+de potências e fatoriais, resultando em complexidade exponencial.
+
+A definição por recursividade mútua é muito mais eficiente, com complexidade linear O(n),
+pois cada termo é calculado a partir do anterior usando multiplicações simples.
+
+Para comprovar empiricamente a diferença de eficiências, podemos medir o tempo de execução
+de ambas as implementações para um valor fixo de |x| e um número elevado de termos |n|.
+
+Dada a definiçao direta de |sinh_direct|:
+
+\begin{code}
+sinh_direct :: Floating a => a -> Int -> a
+sinh_direct x 0 = x
+sinh_direct x n = 
+    let exponent = 2*(n-1)+1
+        numerador = x^exponent
+        denominador = fromIntegral (factorial (fromIntegral exponent))
+    in sinh_direct x (n-1) + numerador / denominador
+
+factorial :: Integer -> Integer
+factorial 0 = 1
+factorial n = n * factorial (n-1)
+\end{code}
+E a função de medição de tempo:
+
+\begin{code}
+measure :: String -> Double -> IO Double
+measure label expr = do
+    start <- getCPUTime
+    expr `deepseq` return ()
+    end <- getCPUTime
+    let t = fromIntegral (end - start) / 1e12
+    putStrLn (label ++ " levou " ++ show t ++ " s")
+    return expr
+\end{code}
+
+Podemos então definir os testes:
+
+\begin{code}
+test1 :: IO Double
+test1 = measure "sinh_direct" $
+          sum [sinh_direct 1.2 50 | _ <- [1..1000]]
+\end{code}
+
+\begin{code}
+test2 :: IO Double
+test2 = measure "s" $
+          sum [s 1.2 50 | _ <- [1..1000]]
+\end{code}
+
+Aos quais temos o seguinte resultado esperado:
+
+\begin{Verbatim}[fontsize=\small]
+ghci> test1
+sinh_direct levou 0.993274742 s
+2709.4613554122184
+ghci> test2
+s levou 0.16554923 s
+1509.4613554121977
+\end{Verbatim}
+
+Comprovando, assim, a superior eficiência da definição por recursividade mútua.
 
 \subsection*{Problema 3}
 
@@ -1312,8 +1381,7 @@ Isto representa que cada elemento de um stream é um par composto por um valor d
 
 Pretende-se definir a função
 \begin{spec}
-fair\_merge :: (Stream\,a \times Stream\,a) + (Stream\,a \times Stream\,a)
-            \to Stream\,a
+fair_merge :: (Stream a, Stream a) -> Stream a
 \end{spec}
 
 como um anamorfismo.
@@ -1642,6 +1710,45 @@ Portanto, respondendo às questões iniciais:
 \item A probabilidade de seguirem todas as palavras, mas faltar o \texttt{"stop"} é de $\mathbf{8.6\%}$
 \item A probabilidade de transmissão perfeita é de $\mathbf{77.2\%}$
 \end{itemize}
+
+\subsubsection*{Comprovação dos resultados}
+
+Para comprovar os resultados obtidos, calculemos a probabilidade de cada perda ou sucesso unitário de forma manual.
+Temos que:
+
+\begin{itemize}
+\item $P(\text{perder palavra}) = 0.05 \,\%$
+\item $P(\text{transmitir palavra}) = 1 - P(\text{perder palavra}) = 0.95 \,\%$
+\item $P(\text{não enviar stop}) = 0.1 \,\%$
+\item $P(\text{enviar stop}) = 1 - P(\text{não enviar stop}) = 0.9 \,\%$
+\end{itemize}
+
+Calculamos agora as probabilidades dos eventos pedidos:
+
+\begin{itemize}
+\item \textbf{Probabilidade de "atacar" se perder}:
+\begin{multline*}
+P(\text{"atacar" se perder}) = P(\text{transmitir "Vamos"}) \times P(\text{perder "atacar"}) \\
+\times P(\text{transmitir "hoje"}) \times P(\text{enviar stop}) \\
+= 0.95 \times 0.05 \times 0.95 \times 0.9 = 0.0406125 \approx 4.1\%
+\end{multline*}
+
+\item \textbf{Probabilidade de faltar "stop"}:
+\begin{multline*}
+P(\text{faltar "stop"}) = P(\text{transmitir "Vamos"}) \times P(\text{transmitir "atacar"}) \\
+\times P(\text{transmitir "hoje"}) \times P(\text{não enviar stop}) \\
+= 0.95 \times 0.95 \times 0.95 \times 0.1 = 0.0857375 \approx 8.6\%
+\end{multline*}
+
+\item \textbf{Probabilidade de transmissão perfeita}:
+\begin{multline*}
+P(\text{transmissão perfeita}) = P(\text{transmitir "Vamos"}) \times P(\text{transmitir "atacar"}) \\
+\times P(\text{transmitir "hoje"}) \times P(\text{enviar stop}) \\
+= 0.95 \times 0.95 \times 0.95 \times 0.9 = 0.7716375 \approx 77.2\%
+\end{multline*}
+\end{itemize}
+
+
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
 
