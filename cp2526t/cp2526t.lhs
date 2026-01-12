@@ -127,6 +127,8 @@
 %format t3 = "t_3 "
 %format t4 = "t_4 "
 %format t5 = "t_5 "
+%format g_L = "g_{L}"
+%format g_R = "g_{R}"
 %------------------------------------------------------------------------------%
 
 
@@ -1065,7 +1067,10 @@ s \ x \ n =
 
 onde |s x n| é a soma dos primeiros |n+1| termos, |h x n| é o numerador do termo |n| e |k x n| é o denominador do termo |n|.
 
-\subsubsection*{Descoberta de |h| por recursividade mútua}
+Tenha-se atenção que o índice |n| representa o número de iterações já realizadas, começando em |n = 0|,
+que corresponde ao primeiro termo da série.
+
+\subsubsection*{Descoberta do numerador por recursividade mútua (|h|)}
 
 Observando que cada termo tem a forma $\frac{x^{2i+1}}{(2i+1)!}$, 
 procuramos uma relação de recorrência para o numerador |h|.
@@ -1089,7 +1094,7 @@ h \ x \ n =
      \end{cases}
 \end{equation}
 
-\subsubsection*{Descoberta de |k| por recursividade mútua (2ª iteração)}
+\subsubsection*{Descoberta do denominador por recursividade mútua (|k|, 2ª iteração)}
 
 Calculemos a relação de recorrência para o denominador |k|.
 O denominador do termo na posição |n| considerando que este começa em |n = 1|
@@ -1113,7 +1118,10 @@ k \ x \ n =
 
 Aplicar-se-á a lei de recursividade mútua novamente para obter uma definição de |k| que não dependa de |n| diretamente.
 
-\subsubsection*{Descoberta de |j| por recursividade mútua (3ª iteração)}
+Para |h| e |k|, o índice |n| começa em |1|, pois estas funções representam o numerador e denominador do termo |n| da série,
+não do índice de iterações como em |s|.
+
+\subsubsection*{Descoberta do denominador por recursividade mútua (|j|, 3ª iteração)}
 
 Introduzamos uma nova função |j x n = (2n+5)(2n+4)| para simplificar a expressão de |k|.
 
@@ -1133,7 +1141,7 @@ j \ x \ n =
      \end{cases}
 \end{equation}
 
-\subsubsection*{Descoberta de |m| por recursividade mútua (4ª iteração)}
+\subsubsection*{Descoberta do denominador por recursividade mútua (|m|, 4ª iteração)}
 
 Para simplificar ainda mais, introduzimos |m x n = 8n + 22|.
 
@@ -1155,6 +1163,9 @@ m \ x \ n =
 
 Tendo chegado a um ponto onde |m| é uma função linear simples, podemos agora expressar todas as funções
 em termos de recursividade mútua.
+
+Para |j| e |m|, o índice |n| começa em |0|, tendo um significado puramente matemático. Na realidade,
+estas funções têm um caráter auxiliar, tendo um índice sincronizado para gerar o termo de índice |n+1|.
 
 \subsubsection*{Sistema final de recursividade mútua}
 
@@ -1378,6 +1389,9 @@ F S = A >< S
 
 Isto representa que cada elemento de um stream é um par composto por um valor do tipo arbitrário |A|
 (que representa o tipo dos elementos do stream) e o restante da estrutura do stream.
+
+Como era de esperar, o functor |F| é bastante similar ao functor das listas,
+com a diferença de que não existe o caso vazio (|Nil|), visto que as streams são infinitas.
 
 Pretende-se definir a função
 \begin{spec}
@@ -1748,6 +1762,25 @@ P(\text{transmissão perfeita}) = P(\text{transmitir "Vamos"}) \times P(\text{tr
 \end{multline*}
 \end{itemize}
 
+\subsection*{Conclusão}
+
+De um ponto de vista mais técnico, conseguimos compreender conceitos complexos de cálculo de programas
+e aplicá-los na resolução de problemas práticos.
+O trabalho exigiu muito esforço de análise, pensamento crítico e criatividade para derivar soluções elegantes.
+Houve uma tentativa de transformar a função do anamorfismo do Problema 1 em uma definição pointfree,
+mas mostrou-se demasiado complexa e foi abandonada.
+No geral, sentimos ter cumprido os objetivos propostos e critérios mínimos de aprofundamento e rigor,
+que aqui ficam apresentados neste relatório.
+
+Falando mais praticamente, este trabalho foi bastante desafiante e divertido de realizar.
+Em grupo, foi necessário discutir e analisar cuidadosamente cada problema, o que promoveu um ambiente de aprendizagem colaborativa.
+A resolução dos problemas envolveu várias tentativas e erros, sendo um sentimento recompensador quando finalmente chegámos às soluções corretas.
+
+Deixamos, em sentido de gratificação, o nosso agradecimento à equipa docente, pelo excelente 
+trabalho desenvolvido ao longo do semestre. É de salientar a clareza e profundidade com que os conceitos foram apresentados,
+o entusiasmo demonstrado durante as aulas, e a disponibilidade para esclarecer dúvidas e apoiar os alunos.
+Achamos que a unidade curricular de Cálculo de Programas apresenta-nos uma área muito interessante e 
+diferente do ritmo habitual do restante do curso, o que nos permitiu expandir os nossos horizontes e conhecimentos académicos.
 
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%

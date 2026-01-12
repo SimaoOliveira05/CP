@@ -1383,7 +1383,10 @@ s \ x \ n =
 
 onde \ensuremath{\Varid{s}\;\Varid{x}\;\Varid{n}} é a soma dos primeiros \ensuremath{\Varid{n}\mathbin{+}\mathrm{1}} termos, \ensuremath{\Varid{h}\;\Varid{x}\;\Varid{n}} é o numerador do termo \ensuremath{\Varid{n}} e \ensuremath{\Varid{k}\;\Varid{x}\;\Varid{n}} é o denominador do termo \ensuremath{\Varid{n}}.
 
-\subsubsection*{Descoberta de \ensuremath{\Varid{h}} por recursividade mútua}
+Tenha-se atenção que o índice \ensuremath{\Varid{n}} representa o número de iterações já realizadas, começando em \ensuremath{\Varid{n}\mathrel{=}\mathrm{0}},
+que corresponde ao primeiro termo da série.
+
+\subsubsection*{Descoberta do numerador por recursividade mútua (\ensuremath{\Varid{h}})}
 
 Observando que cada termo tem a forma $\frac{x^{2i+1}}{(2i+1)!}$, 
 procuramos uma relação de recorrência para o numerador \ensuremath{\Varid{h}}.
@@ -1407,7 +1410,7 @@ h \ x \ n =
      \end{cases}
 \end{equation}
 
-\subsubsection*{Descoberta de \ensuremath{\Varid{k}} por recursividade mútua (2ª iteração)}
+\subsubsection*{Descoberta do denominador por recursividade mútua (\ensuremath{\Varid{k}}, 2ª iteração)}
 
 Calculemos a relação de recorrência para o denominador \ensuremath{\Varid{k}}.
 O denominador do termo na posição \ensuremath{\Varid{n}} considerando que este começa em \ensuremath{\Varid{n}\mathrel{=}\mathrm{1}}
@@ -1431,7 +1434,10 @@ k \ x \ n =
 
 Aplicar-se-á a lei de recursividade mútua novamente para obter uma definição de \ensuremath{\Varid{k}} que não dependa de \ensuremath{\Varid{n}} diretamente.
 
-\subsubsection*{Descoberta de \ensuremath{\Varid{j}} por recursividade mútua (3ª iteração)}
+Para \ensuremath{\Varid{h}} e \ensuremath{\Varid{k}}, o índice \ensuremath{\Varid{n}} começa em \ensuremath{\mathrm{1}}, pois estas funções representam o numerador e denominador do termo \ensuremath{\Varid{n}} da série,
+não do índice de iterações como em \ensuremath{\Varid{s}}.
+
+\subsubsection*{Descoberta do denominador por recursividade mútua (\ensuremath{\Varid{j}}, 3ª iteração)}
 
 Introduzamos uma nova função \ensuremath{\Varid{j}\;\Varid{x}\;\Varid{n}\mathrel{=}(\mathrm{2}\;\Varid{n}\mathbin{+}\mathrm{5})\;(\mathrm{2}\;\Varid{n}\mathbin{+}\mathrm{4})} para simplificar a expressão de \ensuremath{\Varid{k}}.
 
@@ -1451,7 +1457,7 @@ j \ x \ n =
      \end{cases}
 \end{equation}
 
-\subsubsection*{Descoberta de \ensuremath{\Varid{m}} por recursividade mútua (4ª iteração)}
+\subsubsection*{Descoberta do denominador por recursividade mútua (\ensuremath{\Varid{m}}, 4ª iteração)}
 
 Para simplificar ainda mais, introduzimos \ensuremath{\Varid{m}\;\Varid{x}\;\Varid{n}\mathrel{=}\mathrm{8}\;\Varid{n}\mathbin{+}\mathrm{22}}.
 
@@ -1473,6 +1479,9 @@ m \ x \ n =
 
 Tendo chegado a um ponto onde \ensuremath{\Varid{m}} é uma função linear simples, podemos agora expressar todas as funções
 em termos de recursividade mútua.
+
+Para \ensuremath{\Varid{j}} e \ensuremath{\Varid{m}}, o índice \ensuremath{\Varid{n}} começa em \ensuremath{\mathrm{0}}, tendo um significado puramente matemático. Na realidade,
+estas funções têm um caráter auxiliar, tendo um índice sincronizado para gerar o termo de índice \ensuremath{\Varid{n}\mathbin{+}\mathrm{1}}.
 
 \subsubsection*{Sistema final de recursividade mútua}
 
@@ -1767,6 +1776,9 @@ O functor associado a este tipo é, portanto:
 Isto representa que cada elemento de um stream é um par composto por um valor do tipo arbitrário \ensuremath{\Conid{A}}
 (que representa o tipo dos elementos do stream) e o restante da estrutura do stream.
 
+Como era de esperar, o functor \ensuremath{\Conid{F}} é bastante similar ao functor das listas,
+com a diferença de que não existe o caso vazio (\ensuremath{\Conid{Nil}}), visto que as streams são infinitas.
+
 Pretende-se definir a função
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1860,7 +1872,7 @@ podemos agora expressar \ensuremath{\Varid{fair\char95 merge}} diretamente como:
 \ColumnHook
 \end{hscode}\resethooks
 
-onde \ensuremath{\Varid{g}\mathrel{=}\alt{\Varid{g\char95 L}}{\Varid{g\char95 R}}} com as componentes já derivadas anteriormente.
+onde \ensuremath{\Varid{g}\mathrel{=}\alt{g_{L}}{g_{R}}} com as componentes já derivadas anteriormente.
 Escrevendo \ensuremath{\Varid{g}} de forma explícita e única, obtem-se a definição final do gene
 com:
 
@@ -2198,6 +2210,25 @@ P(\text{transmissão perfeita}) = P(\text{transmitir "Vamos"}) \times P(\text{tr
 \end{multline*}
 \end{itemize}
 
+\subsection*{Conclusão}
+
+De um ponto de vista mais técnico, conseguimos compreender conceitos complexos de cálculo de programas
+e aplicá-los na resolução de problemas práticos.
+O trabalho exigiu muito esforço de análise, pensamento crítico e criatividade para derivar soluções elegantes.
+Houve uma tentativa de transformar a função do anamorfismo do Problema 1 em uma definição pointfree,
+mas mostrou-se demasiado complexa e foi abandonada.
+No geral, sentimos ter cumprido os objetivos propostos e critérios mínimos de aprofundamento e rigor,
+que aqui ficam apresentados neste relatório.
+
+Falando mais praticamente, este trabalho foi bastante desafiante e divertido de realizar.
+Em grupo, foi necessário discutir e analisar cuidadosamente cada problema, o que promoveu um ambiente de aprendizagem colaborativa.
+A resolução dos problemas envolveu várias tentativas e erros, sendo um sentimento recompensador quando finalmente chegámos às soluções corretas.
+
+Deixamos, em sentido de gratificação, o nosso agradecimento à equipa docente, pelo excelente 
+trabalho desenvolvido ao longo do semestre. É de salientar a clareza e profundidade com que os conceitos foram apresentados,
+o entusiasmo demonstrado durante as aulas, e a disponibilidade para esclarecer dúvidas e apoiar os alunos.
+Achamos que a unidade curricular de Cálculo de Programas apresenta-nos uma área muito interessante e 
+diferente do ritmo habitual do restante do curso, o que nos permitiu expandir os nossos horizontes e conhecimentos académicos.
 
 
 %----------------- Índice remissivo (exige makeindex) -------------------------%
