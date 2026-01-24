@@ -1,4 +1,4 @@
-# CP-TP — Program Calculation
+# CP — Program Calculation
 
 This repository contains the **final report and implementation** of the **Practical Assignment for the course _Program Calculation_**, developed within the  
 **Bachelor’s Degree in Computer Engineering / Computer Science**  
