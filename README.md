@@ -10,7 +10,7 @@ The project was implemented in **Haskell**, strictly following the principles of
 
 ## Grade
 
-**Final Grade: 20 / 20**
+**⭐ Grade: ?? / 20 ⭐**
 
 ---
 
