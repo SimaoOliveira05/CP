@@ -5,6 +5,12 @@ This repository contains the **final report and implementation** of the **Practi
 at the **University of Minho** (academic year **2025/2026**).
 
 The project was implemented in **Haskell**, strictly following the principles of **Program Calculation**, **Functional Programming**, and **Literate Programming**, as taught in the course.
+---
+## Authors
+
+- *Gabriel Dantas* -> [@gabil88](https://github.com/gabil88)
+- *José Fernandes* -> [@JoseLourencoFernandes](https://github.com/JoseLourencoFernandes)
+- *Simão Oliveira* -> [@SimaoOliveira05](https://github.com/SimaoOliveira05)
 
 ---
 
