@@ -1,10 +1,5 @@
 # CP — Program Calculation
 
-This repository contains the **final report and implementation** of the **Practical Assignment for the course _Program Calculation_**, developed within the  
-**Bachelor’s Degree in Computer Engineering / Computer Science**  
-at the **University of Minho** (academic year **2025/2026**).
-
-The project was implemented in **Haskell**, strictly following the principles of **Program Calculation**, **Functional Programming**, and **Literate Programming**, as taught in the course.
 ---
 ## Authors
 
