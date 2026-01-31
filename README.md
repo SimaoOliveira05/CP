@@ -1,103 +1,21 @@
 # CP — Program Calculation
 
----
+The main goal of this project is to apply the theoretical foundations of **Program Calculation** to the systematic derivation of correct and efficient programs.  
+All solutions are obtained through algebraic reasoning, recursion schemes, and formal justification.
+
+## Grade
+
+**Final Grade:** 20 / 20 ⭐
+
 ## Authors
 
 - *Gabriel Dantas* -> [@gabil88](https://github.com/gabil88)
 - *José Fernandes* -> [@JoseLourencoFernandes](https://github.com/JoseLourencoFernandes)
 - *Simão Oliveira* -> [@SimaoOliveira05](https://github.com/SimaoOliveira05)
 
----
-
-## Grade
-
-**⭐ Grade: ?? / 20 ⭐**
-
----
-
-## Project Overview
-
-The main goal of this project is to apply the theoretical foundations of **Program Calculation** to the systematic derivation of correct and efficient programs.  
-All solutions are obtained through algebraic reasoning, recursion schemes, and formal justification.
-
-A key requirement of the assignment is that **code and documentation coincide**, following the paradigm of *literate programming*.  
-As such, the entire project is written in a single `.lhs` (Literate Haskell) file, which simultaneously serves as:
-
-- Executable Haskell source code  
-- Complete technical report  
-- Formal derivation and justification of all solutions  
-
----
-
-## Topics and Concepts Covered
-
-- Catamorphisms and anamorphisms  
-- Mutual recursion and its algebraic laws  
-- Breadth-first and depth-first tree traversals  
-- Stream processing and fair interleaving  
-- Probabilistic programming using monads  
-- Formal derivations from mathematical specifications  
-- Diagrammatic reasoning  
-- Literate programming in Haskell  
-
----
-
-## Problems Addressed
-
-### Problem 1 — Breadth-First Traversal of Binary Trees
-
-- Definition of a breadth-first traversal using:
-  - A catamorphism that computes tree levels
-  - An anamorphism that directly generates the traversal
-- Comparison between depth-first and breadth-first approaches
-- Formal derivation of the corresponding recursion schemes
-
----
-
-### Problem 2 — Derivation of the Hyperbolic Sine Function
-
-- Derivation of the function `sinh` from its Taylor series
-- Transformation of a mathematical specification into an efficient algorithm
-- Application of the law of mutual recursion
-- Performance analysis and comparison with a naïve implementation
-
----
-
-### Problem 3 — Fair Merge of Infinite Streams
-
-- Formalization of fair interleaving between two infinite streams
-- Definition of `fair_merge` as an anamorphism
-- Derivation using the dual law of mutual recursion
-
----
-
-### Problem 4 — Probabilistic Message Transmission
-
-- Modeling a faulty telegraph system using probabilistic computation
-- Definition of a probabilistic catamorphism over lists
-- Use of the distribution monad to compute transmission probabilities
-- Analytical validation of the obtained results
-
----
-
-## Technologies and Tools Used
-
-- Haskell
-- Literate Haskell (`.lhs`)
-- GHCi
-- lhs2TeX
-- LaTeX
-- BibTeX
-- MakeIndex
-- Docker
-
----
-
 ## Building the Report
 
 The project can be built either **using Docker (recommended)** or **locally** using `lhs2TeX` and LaTeX tools.
-
----
 
 ### Option 1 — Using Docker (Recommended)
 
