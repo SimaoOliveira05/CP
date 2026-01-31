@@ -1,4 +1,4 @@
-# CP — Program Calculation
+# CP
 
 The main goal of this project is to apply the theoretical foundations of **Program Calculation** to the systematic derivation of correct and efficient programs.  
 All solutions are obtained through algebraic reasoning, recursion schemes, and formal justification.
