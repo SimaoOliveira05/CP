@@ -33,10 +33,6 @@ make
 ```bash
 lhs2TeX cp2526t.lhs > cp2526t.tex
 pdflatex cp2526t
-bibtex cp2526t.aux
-makeindex cp2526t.idx
-pdflatex cp2526t
-pdflatex cp2526t
 ```
 
 After these steps, the final PDF report will be generated.
